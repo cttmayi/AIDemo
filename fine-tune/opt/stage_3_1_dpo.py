@@ -15,12 +15,12 @@ model_ref = AutoModelForCausalLM.from_pretrained(config.local_model_pre_path)
 # 使用datasets库加载JSONL文件
 dataset = load_dataset('json', data_files=config.local_data_dpo_path, split='train')
 
-response_template = '\n'
+response_template = '### Answer:'
 
 def process(rows):
     print(rows)
     for i in range(len(rows['prompt'])):
-        rows['prompt'][i] = rows['prompt'][i] + response_template
+        rows['prompt'][i] = f"### Question: {rows['prompt'][i]}\n" + response_template  
         rows["chosen"][i] = rows["chosen"][i] + tokenizer.eos_token
         rows["rejected"][i] = rows["rejected"][i] + tokenizer.eos_token
     return rows

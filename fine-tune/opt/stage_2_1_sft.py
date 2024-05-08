@@ -11,13 +11,13 @@ tokenizer = AutoTokenizer.from_pretrained(config.local_model_pre_path)
 
 dataset = load_dataset('json', data_files=config.local_data_sft_path, split='train')
 
-response_template = '\n'
+response_template = '### Answer:'
 
 def formatting_prompts_func(examples):
     output_texts = []
     # print(examples)
     for i in range(len(examples['prompt'])):
-        text = tokenizer.bos_token + f"{examples['prompt'][i]}" + response_template +f"{examples['response'][i]}" + tokenizer.eos_token
+        text = tokenizer.bos_token + f"### Question: {examples['prompt'][i]}\n" + response_template + f"{examples['response'][i]}" + tokenizer.eos_token
         print(text)
         output_texts.append(text)
     return output_texts
@@ -26,7 +26,7 @@ collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=tokenize
 
 training_args = TrainingArguments(
         output_dir='./output',
-        max_steps=10,
+        max_steps=3,
     )
 
 

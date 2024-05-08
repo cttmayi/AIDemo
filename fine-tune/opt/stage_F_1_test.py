@@ -8,11 +8,16 @@ init(autoreset=True)
 inputs = [
     "What is MediaTek?",
     "What is VIVO?",
+    "What is Xiaomi?",
+    "What is OPPO?",
 ]
 
 def generate(model_name, input):
     model = AutoModelForCausalLM.from_pretrained(model_name).to(config.device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+    if model_name == config.local_model_sft_path:
+        input = f"### Question: {input}\n ### Answer: "
     input_ids = tokenizer.encode(input, return_tensors="pt", add_special_tokens=True).to(config.device)
     output_ids = model.generate(input_ids, max_length=config.model_max_length)
 
@@ -22,7 +27,7 @@ for name in (
         config.local_model_path,
         config.local_model_pre_path,
         config.local_model_sft_path,
-        config.local_model_dpo_path,
+        #config.local_model_dpo_path,
     ):
     
     if os.path.exists(name):

@@ -1,6 +1,6 @@
 
-device = 'mps'
-model_name = 'facebook/opt-125m'
+device = 'cpu'
+model_name = 'facebook/opt-350m'
 
 local_model_path = 'models/opt.pt'
 local_model_pre_path = 'models/opt_pre.pt'

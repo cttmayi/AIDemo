@@ -1,0 +1,11 @@
+
+
+*.pyc
+
+.env
+.vscode
+
+data/
+models/
+
+
