@@ -1,0 +1,58 @@
+from typing import Dict, List
+
+from datasets import load_dataset
+from datasets import Dataset
+from pathlib import Path
+
+from dataclasses import dataclass, field
+from transformers import HfArgumentParser
+
+
+@dataclass
+class DatasetArguments:
+    data_path: str = field(
+        metadata={"help": "Path to the data"}
+        )
+    save_path: str = field(
+        metadata={"help": "Path to save the data"}
+        )
+    data_size: float = field(
+        default=0.2,
+        metadata={"help": "Data size rate for test"}
+        )
+
+def split_data(
+    dataset: Dataset,
+    size = 0.2,
+    seed = 0,
+) -> Dict[str, Dataset]:
+
+    test_size = int(size) if size > 1 else size
+    dataset = dataset.train_test_split(test_size=test_size, seed=seed)
+    return dataset
+
+
+
+def load_data(file_path):
+    file_extension = Path(file_path).suffix.lower()
+    dataset = None
+    if file_extension == '.csv':
+        dataset = load_dataset('csv', data_files=file_path)['train']
+    elif file_extension == '.json' or file_extension == '.jsonl':
+        dataset = load_dataset('json', data_files=file_path)['train']
+        print(dataset)
+    else:
+        raise ValueError("Unsupported file format. Please provide a CSV or JSON file.")
+    return dataset
+
+
+if __name__ == "__main__":
+    parser = HfArgumentParser(DatasetArguments)
+    args:DatasetArguments = parser.parse_args_into_dataclasses()[0]
+    
+    dataset = load_data(args.data_path)
+    splitted_dataset = split_data(dataset, args.data_size)
+
+    print(splitted_dataset)
+    splitted_dataset.save_to_disk(args.save_path)
+

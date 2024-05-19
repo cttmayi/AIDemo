@@ -23,3 +23,8 @@ def dataset_split(
     dataset = dataset.train_test_split(test_size=test_size, seed=seed)
     return dataset
 
+
+
+
+r = load_dataset('json', data_files='data/text.jsonl')
+print(r)
