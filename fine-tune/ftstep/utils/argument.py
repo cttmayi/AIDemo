@@ -2,7 +2,15 @@ from utils import config
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
-# from transformers import TrainingArguments
+from transformers import TrainingArguments
+
+from transformers.trainer_utils import (
+    EvaluationStrategy,
+    FSDPOption,
+    HubStrategy,
+    IntervalStrategy,
+    SchedulerType,
+)
 
 # Define and parse arguments.
 @dataclass
@@ -62,8 +70,6 @@ class ModelArguments:
         metadata={"help": "Activate nested quantization for 4bit base models"},
     )
 
-
-
     # quantization 8bit
     use_8bit_quantization: Optional[bool] = field(
         default=False,
@@ -82,6 +88,7 @@ class DataTrainingArguments:
         default="timdettmers/openassistant-guanaco",
         metadata={"help": "The preference dataset to use."},
     )
+
     packing: Optional[bool] = field(
         default=False,
         metadata={"help": "Use packing dataset creating."},
@@ -102,3 +109,21 @@ class DataTrainingArguments:
         metadata={"help": "If True, tokenizers adds special tokens to each sample being packed."},
     )
 
+@dataclass
+class TrainTrainingArguments(TrainingArguments):
+    num_train_epochs: float = field(default=3.0, metadata={"help": "Total number of training epochs to perform."})
+
+    save_strategy: Union[IntervalStrategy, str] = field(
+        default="no",
+        metadata={"help": "The checkpoint save strategy to use."},
+    )
+
+    per_device_train_batch_size: int = field(
+        default=4, 
+        metadata={"help": "Batch size per GPU/TPU/MPS/NPU core/CPU for training."}
+    )
+
+    output_dir: str = field(
+        default='output',
+        metadata={"help": "The output directory where the model predictions and checkpoints will be written."},
+    )

@@ -7,16 +7,15 @@ from trl import SFTTrainer
 
 from utils.model import create_model
 from utils.dataset import create_datasets
-from utils.argument import ModelArguments, DataTrainingArguments
-from transformers import TrainingArguments
+from utils.argument import ModelArguments, DataTrainingArguments, TrainTrainingArguments
 
 
-def main(model_args:ModelArguments, data_args:DataTrainingArguments, training_args:TrainingArguments):
+def main(model_args:ModelArguments, data_args:DataTrainingArguments, training_args:TrainTrainingArguments):
     # Set seed for reproducibility
     set_seed(training_args.seed)
 
     # model
-    model, peft_config, tokenizer, collator = create_model(model_args)
+    model, peft_config, tokenizer, collator, dataset_preprocess= create_model(model_args)
 
     # gradient ckpt
     model.config.use_cache = not training_args.gradient_checkpointing
@@ -28,7 +27,7 @@ def main(model_args:ModelArguments, data_args:DataTrainingArguments, training_ar
     train_dataset = create_datasets(
         tokenizer,
         data_args,
-        apply_chat_template=model_args.chat_template_format is not None,
+        dataset_preprocess
     )
 
     # trainer
@@ -68,6 +67,6 @@ def main(model_args:ModelArguments, data_args:DataTrainingArguments, training_ar
 
 
 if __name__ == "__main__":
-    parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainingArguments))
+    parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainTrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
     main(model_args, data_args, training_args)
