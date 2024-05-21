@@ -63,13 +63,12 @@ def create_model(model_args:ModelArguments):
         )
 
     special_tokens = None
-    dataset_preprocess = None
-    collator = None
 
 
-    if model_args.chat_template_format is not None:
-        template = templates.load_templates(model_args.chat_template_format)
-        special_tokens = template.get_special_tokens()
+    template = None
+    if model_args.template_format is not None:
+        template = templates.load_templates(model_args.template_format)
+        special_tokens = template.SpecialTokens
 
 
     if special_tokens is not None:
@@ -88,10 +87,12 @@ def create_model(model_args:ModelArguments):
         tokenizer = AutoTokenizer.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
         tokenizer.pad_token = tokenizer.eos_token
 
-    if model_args.chat_template_format is not None:
+    preprocess = None
+    collator = None
+    if template is not None:
         # template = templates.load_templates(model_args.chat_template_format)
-        template.set_tokenizer(tokenizer)
-        dataset_preprocess = template.get_dataset_preprocess()
-        collator = template.get_collator()
+        template = template.Template(tokenizer)
+        preprocess = template.preprocess
+        collator = template.collator
 
-    return model, peft_config, tokenizer, collator, dataset_preprocess
+    return model, peft_config, tokenizer, collator, preprocess

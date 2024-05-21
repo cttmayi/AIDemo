@@ -23,9 +23,9 @@ class ModelArguments:
         default=config.default_model_name,
         metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"}
     )
-    chat_template_format: Optional[str] = field(
+    template_format: Optional[str] = field(
         default=None,
-        metadata={"help": "chatml|zephyr|none. Pass `none` if the dataset is already formatted with the chat template."},
+        metadata={"help": "Pass None if the dataset is already formatted with the chat template."},
     )
 
     # PEFT Lora
@@ -124,6 +124,6 @@ class TrainTrainingArguments(TrainingArguments):
     )
 
     output_dir: str = field(
-        default='output',
+        # default='output',
         metadata={"help": "The output directory where the model predictions and checkpoints will be written."},
     )
