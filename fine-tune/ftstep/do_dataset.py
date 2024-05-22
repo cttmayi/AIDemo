@@ -20,6 +20,10 @@ class DatasetArguments:
         default=0.2,
         metadata={"help": "Data size rate for test"}
         )
+    save_format: str = field(
+        default='disk',
+        metadata={"help": "Save format(disk,jsonl)"}
+    )
 
 def split_data(
     dataset: Dataset,
@@ -40,7 +44,6 @@ def load_data(file_path):
         dataset = load_dataset('csv', data_files=file_path)['train']
     elif file_extension == '.json' or file_extension == '.jsonl':
         dataset = load_dataset('json', data_files=file_path)['train']
-        print(dataset)
     else:
         raise ValueError("Unsupported file format. Please provide a CSV or JSON file.")
     return dataset
@@ -54,5 +57,10 @@ if __name__ == "__main__":
     splitted_dataset = split_data(dataset, args.data_size)
 
     print(splitted_dataset)
-    splitted_dataset.save_to_disk(args.save_path)
+
+    if args.save_format == 'disk':
+        splitted_dataset.save_to_disk(args.save_path)
+    elif args.save_format == 'jsonl':
+        for split_name, split_dataset in splitted_dataset.items():
+            split_dataset.to_json(f"{args.save_path}/{split_name}.jsonl")
 
