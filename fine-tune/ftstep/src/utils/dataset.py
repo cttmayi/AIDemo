@@ -11,10 +11,10 @@ def create_datasets(tokenizer, data_args:DataTrainingArguments, dataset_preproce
 
     try:
         # Try first if dataset on a Hub repo
-        dataset = load_dataset(data_args.dataset_name, split='train')
+        dataset = load_dataset(data_args.dataset_name_or_path, split='train')
     except (DatasetNotFoundError, DatasetGenerationError):
         # If not, check local dataset
-        dataset = load_from_disk(os.path.join(data_args.dataset_name, split='train'))
+        dataset = load_from_disk(os.path.join(data_args.dataset_name_or_path, split='train'))
 
     if dataset_preprocess:
         dataset = dataset.map(

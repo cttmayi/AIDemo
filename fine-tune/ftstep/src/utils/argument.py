@@ -20,7 +20,6 @@ class ModelArguments:
     """
 
     model_name_or_path: str = field(
-        default=config.default_model_name,
         metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"}
     )
     template_format: Optional[str] = field(
@@ -84,8 +83,8 @@ class ModelArguments:
 
 @dataclass
 class DataTrainingArguments:
-    dataset_name: Optional[str] = field(
-        default="timdettmers/openassistant-guanaco",
+    dataset_name_or_path: Optional[str] = field(
+        # default="timdettmers/openassistant-guanaco",
         metadata={"help": "The preference dataset to use."},
     )
 
