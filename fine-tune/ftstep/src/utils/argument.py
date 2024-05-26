@@ -36,7 +36,8 @@ class ModelArguments:
     lora_dropout: Optional[float] = field(default=0.1)
     lora_r: Optional[int] = field(default=64)
     lora_target_modules: Optional[str] = field(
-        default="q_proj,k_proj,v_proj,o_proj,down_proj,up_proj,gate_proj",
+        # default="q_proj,k_proj,v_proj,o_proj,down_proj,up_proj,gate_proj",
+        default= None,
         metadata={"help": "comma separated list of target modules to apply LoRA layers to"},
     )
 

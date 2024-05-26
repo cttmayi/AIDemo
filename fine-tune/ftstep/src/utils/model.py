@@ -57,9 +57,9 @@ def create_model(model_args:ModelArguments):
             r=model_args.lora_r,
             bias="none",
             task_type="CAUSAL_LM",
-            target_modules=model_args.lora_target_modules.split(",")
-            if model_args.lora_target_modules != "all-linear"
-            else model_args.lora_target_modules,
+            target_modules= model_args.lora_target_modules.split(",") if model_args.lora_target_modules else None,
+            #if model_args.lora_target_modules != "all-linear"
+            #else model_args.lora_target_modules,
         )
 
     tokenizer = AutoTokenizer.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
