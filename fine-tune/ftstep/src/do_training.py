@@ -25,8 +25,7 @@ def main(model_args:ModelArguments, data_args:DataTrainingArguments, training_ar
 
     # datasets
     train_dataset = create_datasets(
-        tokenizer,
-        data_args,
+        data_args.dataset_name_or_path,
         dataset_preprocess
     )
 
@@ -40,10 +39,10 @@ def main(model_args:ModelArguments, data_args:DataTrainingArguments, training_ar
         data_collator=collator,
         peft_config=peft_config,
         packing=data_args.packing,
-        dataset_kwargs={
-            "append_concat_token": data_args.append_concat_token,
-            "add_special_tokens": data_args.add_special_tokens,
-        },
+        #dataset_kwargs={
+        #    "append_concat_token": data_args.append_concat_token,
+        #    "add_special_tokens": data_args.add_special_tokens,
+        #},
         dataset_text_field=data_args.dataset_text_field,
         max_seq_length=data_args.max_seq_length,
     )

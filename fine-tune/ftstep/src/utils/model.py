@@ -49,7 +49,7 @@ def create_model(model_args:ModelArguments):
     )
 
     peft_config = None
-    chat_template = None
+
     if model_args.use_peft_lora:
         peft_config = LoraConfig(
             lora_alpha=model_args.lora_alpha,
@@ -62,37 +62,20 @@ def create_model(model_args:ModelArguments):
             else model_args.lora_target_modules,
         )
 
-    special_tokens = None
+    tokenizer = AutoTokenizer.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
+    # tokenizer.pad_token = tokenizer.eos_token
 
+    preprocess = None
+    collator = None
 
     template = None
     if model_args.template_format is not None:
         template = templates.load_templates(model_args.template_format)
-        special_tokens = template.SpecialTokens
-
-
-    if special_tokens is not None:
-        tokenizer = AutoTokenizer.from_pretrained(
-            model_args.model_name_or_path,
-            pad_token=special_tokens.pad_token.value,
-            bos_token=special_tokens.bos_token.value,
-            eos_token=special_tokens.eos_token.value,
-            additional_special_tokens=special_tokens.list(),
-            trust_remote_code=True,
-        )
-        # tokenizer.chat_template = chat_template
-        # make embedding resizing configurable?
-        model.resize_token_embeddings(len(tokenizer), pad_to_multiple_of=8)
-    else:
-        tokenizer = AutoTokenizer.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
-        tokenizer.pad_token = tokenizer.eos_token
-
-    preprocess = None
-    collator = None
-    if template is not None:
-        # template = templates.load_templates(model_args.chat_template_format)
-        template = template.Template(tokenizer)
-        preprocess = template.preprocess
-        collator = template.collator
+        if template is not None:
+            preprocess = template.Template(tokenizer).preprocess
+            collator = template.Collator(tokenizer).preprocess
+            # tokenizer.chat_template = template.chat_template
+        else:
+            raise ValueError(f"Template {model_args.template_format} not found")
 
     return model, peft_config, tokenizer, collator, preprocess

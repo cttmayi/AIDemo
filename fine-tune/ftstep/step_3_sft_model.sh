@@ -9,7 +9,9 @@ echo "Run python script: $full_path"
 python "$full_path" \
     --model_name_or_path "model/opt-350m" \
     --dataset_name_or_path "data/text" \
-    --output_dir "model/opt-350m_pretrain" \
+    --template_format example \
+    --max_seq_length 128 \
+    --output_dir "model/opt-350m_sft" \
     --use_peft_lora False \
     --num_train_epochs 5.0
 
