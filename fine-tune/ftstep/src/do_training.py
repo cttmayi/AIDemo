@@ -9,10 +9,12 @@ from utils.model import create_model
 from utils.dataset import create_datasets
 from utils.argument import ModelArguments, DataTrainingArguments, TrainTrainingArguments
 
-from utils.callback import PrinterCallback
+from utils.callback import BoardCallback, SaveCallback, NormalCallback
 
 
-callback = PrinterCallback()
+board_callback = BoardCallback()
+save_callback = SaveCallback()
+normal_callback = NormalCallback()
 
 
 def main(model_args:ModelArguments, data_args:DataTrainingArguments, training_args:TrainTrainingArguments):
@@ -51,7 +53,7 @@ def main(model_args:ModelArguments, data_args:DataTrainingArguments, training_ar
         dataset_text_field=data_args.dataset_text_field,
         max_seq_length=data_args.max_seq_length,
 
-        callbacks=[callback],
+        callbacks=[normal_callback],
     )
 
     trainer.accelerator.print(f"{trainer.model}")
