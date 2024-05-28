@@ -27,13 +27,6 @@ def create_model(model_args:ModelArguments):
             bnb_4bit_use_double_quant=model_args.bnb_4bit_use_nested_quant,
             bnb_4bit_quant_storage=quant_storage_dtype,
         )
-
-        if compute_dtype == torch.float16 and model_args.use_4bit_quantization:
-            major, _ = torch.cuda.get_device_capability()
-            if major >= 8:
-                print("=" * 80)
-                print("Your GPU supports bfloat16, you can accelerate training with the argument --bf16")
-                print("=" * 80)
     elif model_args.use_8bit_quantization:
         bnb_config = BitsAndBytesConfig(load_in_8bit=model_args.use_8bit_quantization)
 

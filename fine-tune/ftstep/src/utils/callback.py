@@ -54,6 +54,11 @@ class NormalCallback(TrainerCallback):
     def on_save(self, args: TrainingArguments, state: TrainerState, control: TrainerControl, **kwargs):
         pass
 
+    def on_evaluate(self, args, state, control, metrics, **kwargs):
+        print('metrics:', metrics)
+        pass
+
+
     def on_log(self, args: TrainingArguments, state: TrainerState, control: TrainerControl, logs, **kwargs):
         loss = logs.pop("loss", None)
         learning_rate = logs.pop("learning_rate", None)

@@ -53,14 +53,19 @@ def main(model_args:ModelArguments, data_args:DataTrainingArguments, training_ar
         dataset_text_field=data_args.dataset_text_field,
         max_seq_length=data_args.max_seq_length,
 
-        callbacks=[normal_callback],
+        # callbacks=[normal_callback],
     )
-
+    print('-' * 40, 'Model', '-' * 40)
     trainer.accelerator.print(f"{trainer.model}")
+    print(trainer.model.config)
+    print('-' * 40, 'Trainable Parameters', '-' * 40)
     try:
         trainer.model.print_trainable_parameters()
-    except:
-        pass
+    finally:
+        for name, param in trainer.model.named_parameters():
+            if param.requires_grad:
+                print(f"{name}: {param.dtype}, {param.size()}")
+    print('-' * 40, 'END', '-' * 40)
 
     # train
     checkpoint = None
