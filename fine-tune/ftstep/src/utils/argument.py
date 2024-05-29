@@ -1,5 +1,3 @@
-from utils import config
-
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
 from transformers import TrainingArguments
@@ -97,7 +95,7 @@ class DataTrainingArguments:
     dataset_text_field: str = field(
         default="text", metadata={"help": "Dataset field to use as input text."})
     
-    max_seq_length: Optional[int] = field(default=config.defualt_model_max_length)
+    max_seq_length: Optional[int] = field(default=256)
 
     append_concat_token: Optional[bool] = field(
         default=False,
@@ -127,3 +125,17 @@ class TrainTrainingArguments(TrainingArguments):
         # default='output',
         metadata={"help": "The output directory where the model predictions and checkpoints will be written."},
     )
+
+    eval_steps: Optional[float] = field(
+        default=500,
+        metadata={
+            "help": (
+                "Run an evaluation every X steps. Should be an integer or a float in range `[0,1)`. "
+                "If smaller than 1, will be interpreted as ratio of total training steps."
+            )
+        },
+    )
+    #evaluation_strategy: Union[IntervalStrategy, str] = field(
+    #    default="steps",
+    #    metadata={"help": "The evaluation strategy to use."},
+    #)

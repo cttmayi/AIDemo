@@ -36,13 +36,19 @@ def main(model_args:ModelArguments, data_args:DataTrainingArguments, training_ar
         dataset_preprocess
     )
 
+    eval_dataset = create_datasets(
+        data_args.dataset_name_or_path,
+        dataset_preprocess,
+        'test'
+    )
+
     # trainer
     trainer = SFTTrainer(
         model=model,
         tokenizer=tokenizer,
         args=training_args,
         train_dataset=train_dataset,
-        # eval_dataset=eval_dataset,
+        eval_dataset=eval_dataset,
         data_collator=collator,
         peft_config=peft_config,
         packing=data_args.packing,
@@ -57,14 +63,16 @@ def main(model_args:ModelArguments, data_args:DataTrainingArguments, training_ar
     )
     print('-' * 40, 'Model', '-' * 40)
     trainer.accelerator.print(f"{trainer.model}")
-    print(trainer.model.config)
+    # print(trainer.model.config)
     print('-' * 40, 'Trainable Parameters', '-' * 40)
     try:
         trainer.model.print_trainable_parameters()
-    finally:
-        for name, param in trainer.model.named_parameters():
-            if param.requires_grad:
-                print(f"{name}: {param.dtype}, {param.size()}")
+    except:
+        pass
+
+    for name, param in trainer.model.named_parameters():
+        if param.requires_grad:
+            print(f"{name}: {param.dtype}, {param.size()}")
     print('-' * 40, 'END', '-' * 40)
 
     # train

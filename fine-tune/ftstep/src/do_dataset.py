@@ -16,13 +16,13 @@ class DatasetArguments:
     save_path: str = field(
         metadata={"help": "Path to save the data"}
         )
-    data_size: float = field(
-        default=0.2,
+    test_size: float = field(
+        default=0.1,
         metadata={"help": "Data size rate for test"}
         )
     save_format: str = field(
-        default='disk',
-        metadata={"help": "Save format(disk,jsonl)"}
+        default='jsonl',
+        metadata={"help": "Save format(jsonl)"}
     )
 
 def split_data(
@@ -37,15 +37,21 @@ def split_data(
 
 
 
-def load_data(file_path):
+def load_data(file_path, data_size):
     file_extension = Path(file_path).suffix.lower()
     dataset = None
     if file_extension == '.csv':
         dataset = load_dataset('csv', data_files=file_path)['train']
+        dataset = split_data(dataset, data_size)
     elif file_extension == '.json' or file_extension == '.jsonl':
         dataset = load_dataset('json', data_files=file_path)['train']
+        dataset = split_data(dataset, data_size)
     else:
-        raise ValueError("Unsupported file format. Please provide a CSV or JSON file.")
+        dataset = load_dataset(file_path)
+        if len(dataset.keys()) == 1:
+            dataset = split_data(dataset['train'], data_size)
+        #raise ValueError("Unsupported file format. Please provide a CSV or JSON file.")
+        
     return dataset
 
 
@@ -53,14 +59,14 @@ if __name__ == "__main__":
     parser = HfArgumentParser(DatasetArguments)
     args:DatasetArguments = parser.parse_args_into_dataclasses()[0]
     
-    dataset = load_data(args.data_path)
-    splitted_dataset = split_data(dataset, args.data_size)
+    dataset = load_data(args.data_path, args.test_size)
+    # splitted_dataset = split_data(dataset)
 
-    print(splitted_dataset)
+    print(dataset)
 
     if args.save_format == 'disk':
-        splitted_dataset.save_to_disk(args.save_path)
+        dataset.save_to_disk(args.save_path)
     elif args.save_format == 'jsonl':
-        for split_name, split_dataset in splitted_dataset.items():
+        for split_name, split_dataset in dataset.items():
             split_dataset.to_json(f"{args.save_path}/{split_name}.jsonl")
 
