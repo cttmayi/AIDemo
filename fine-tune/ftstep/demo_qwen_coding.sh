@@ -3,7 +3,9 @@
 # script
 script_dir=$(dirname "$(realpath "$0")")
 do_dataset="${script_dir}/src/do_dataset.py"
+# do_model="${script_dir}/src/do_model.py"
 do_training="${script_dir}/src/do_training.py"
+# do_test="${script_dir}/src/do_test.py"
 
 
 model="Qwen/Qwen1.5-1.8B"
@@ -14,7 +16,7 @@ if [ ! -d ${dataset_local_path} ]; then
     python "$do_dataset" \
         --data_path jean1/45k_python_code_chinese_instruction \
         --save_path ${dataset_local_path} \
-        --test_size 0.05
+        --test_size 10
 fi
 
 # fine-tune
