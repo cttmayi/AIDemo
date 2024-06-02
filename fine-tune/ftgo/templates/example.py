@@ -28,8 +28,8 @@ class T:
             prompt = samples[prompt_key][id]
             response = samples[response_key][id]
 
-            prompt = '###Qustion: ' + prompt + "\n###Anaswer: "
-            response = response + '\n' # + tokenizer.eos_token
+            prompt = '###Qustion:' + prompt + "\n###Anaswer:"
+            response = response# + tokenizer.eos_token
 
             batch_prompt.append(prompt)
             batch_response.append(response)

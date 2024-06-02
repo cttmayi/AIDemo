@@ -64,9 +64,9 @@ def process(model_name_or_path, dataset_name_or_path):
         if label ==  output:
             correct += 1
         else:
-            print('Not correct:', output, label)
+            print('ID:', total, 'output:', output, 'label:', label)
     
-    scores = rouge.get_scores(output, label, avg=True)
+    scores = rouge.get_scores(hyps, refs, avg=True)
     for key, score in scores.items():
         print(f"{key}: {score}")
     print(f"Accuracy: {correct/total*100}%")

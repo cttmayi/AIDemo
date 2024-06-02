@@ -7,7 +7,7 @@ from src.utils.trainer import SFTTrainer
 from src.utils.model import create_model
 from src.utils.dataset import create_datasets
 
-from src.default import ModelArguments, DatasetArguments, TrainArguments
+from src.default import BasicArguments, TrainArguments
 
 from src.utils.callback import BoardCallback
 
@@ -15,22 +15,22 @@ board_callback = BoardCallback()
 
 
 
-def process(model_args:ModelArguments, dataset_args:DatasetArguments, training_args:TrainArguments):
+def process(basic_args:BasicArguments, training_args:TrainArguments):
     # Set seed for reproducibility
     set_seed(training_args.seed)
 
     # model
-    model, peft_config, tokenizer = create_model(model_args)
+    model, peft_config, tokenizer = create_model(basic_args)
 
     # gradient ckpt
     model.config.use_cache = not training_args.gradient_checkpointing
     training_args.gradient_checkpointing = training_args.gradient_checkpointing
     if training_args.gradient_checkpointing:
-        training_args.gradient_checkpointing_kwargs = {"use_reentrant": model_args.use_reentrant}
+        training_args.gradient_checkpointing_kwargs = {"use_reentrant": basic_args.use_reentrant}
 
     # datasets
-    train_dataset = create_datasets(dataset_args.dataset_name_or_path,)
-    eval_dataset = create_datasets(dataset_args.dataset_name_or_path,'test')
+    train_dataset = create_datasets(basic_args.dataset_name_or_path,)
+    eval_dataset = create_datasets(basic_args.dataset_name_or_path,'test')
 
     # trainer
     trainer = SFTTrainer(
@@ -43,7 +43,7 @@ def process(model_args:ModelArguments, dataset_args:DatasetArguments, training_a
         packing=False, # dataset_args.packing,
         dataset_text_field= 'text', # dataset_args.dataset_text_field,
         # max_seq_length=dataset_args.max_seq_length,
-        data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer, max_length=dataset_args.max_seq_length),
+        data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer, max_length=basic_args.max_seq_length),
         callbacks=[BoardCallback()],
     )
     print('-' * 40, 'Model', '-' * 40)

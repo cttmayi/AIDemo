@@ -7,11 +7,11 @@ from transformers import (
 )
 
 from peft import LoraConfig
-from src.default import ModelArguments
+from src.default import BasicArguments
 
 
 
-def create_model(model_args:ModelArguments):
+def create_model(model_args:BasicArguments):
     bnb_config = None
     quant_storage_dtype = None
 

@@ -13,8 +13,37 @@ class SFTTrainer(trl.SFTTrainer):
         if dataset is None:
             dataset = args[1]
 
+        def preprocess_text(examples):
+            model_inputs = {"input_ids": [], "attention_mask": [], "labels": []}
 
-        def preprocess_sft_pr(examples):
+            for i in range(len(examples["text"])):
+                text = examples["text"][i]
+
+                input_batch = tokenizer(text,
+                    add_special_tokens=True,
+                    truncation=True,
+                    padding=False,
+                    #max_length=max_seq_length,
+                    return_overflowing_tokens=False,
+                    return_length=False,
+                    return_tensors="pt"
+                )
+
+                input_ids = input_batch["input_ids"][0]
+                attention_mask = input_batch["attention_mask"][0]
+                labels = input_ids.clone()
+
+                model_inputs["input_ids"].append(input_ids)
+                model_inputs["attention_mask"].append(attention_mask)
+                model_inputs["labels"].append(labels)
+
+            #print('######')
+            #print(model_inputs)
+
+            return model_inputs
+
+
+        def preprocess_prompt_response(examples):
             model_inputs = {"input_ids": [], "attention_mask": [], "labels": []}
 
             for i in range(len(examples["prompt"])):
@@ -63,21 +92,23 @@ class SFTTrainer(trl.SFTTrainer):
                 model_inputs["attention_mask"].append(attention_mask)
                 model_inputs["labels"].append(labels)
 
-            #print('######')
-            #print(model_inputs)
-
             return model_inputs
 
-
+        # tokenized_dataset = super()._prepare_non_packed_dataloader(*args, **kwargs)
+        preprocess_func = None
         if 'text' in dataset.column_names:
-            tokenized_dataset = super()._prepare_non_packed_dataloader(*args, **kwargs)
+            preprocess_func = preprocess_text
+        elif 'prompt' in dataset.column_names and 'response' in dataset.column_names:
+            preprocess_func = preprocess_prompt_response
         else:
-            tokenized_dataset = dataset.map(
-            preprocess_sft_pr,
+            raise Exception("Unsupported dataset format")
+
+        tokenized_dataset = dataset.map(
+            preprocess_func,
             batched=True,
             remove_columns=dataset.column_names,
             num_proc=self.dataset_num_proc,
-            batch_size=self.dataset_batch_size,
+            batch_size=self.dataset_batch_size, 
         )
 
         return tokenized_dataset

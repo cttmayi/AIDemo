@@ -11,17 +11,16 @@ from transformers.trainer_utils import (
 )
 
 @dataclass
-class ModelArguments:
+class BasicArguments:
     """
     Arguments pertaining to which model/config/tokenizer we are going to fine-tune from.
     """
 
-    model_name_or_path: str = field(
-        # metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"}
-    )
-    #template_format: Optional[str] = field(
-    #    default=None,
-    #)
+    dataset_name_or_path: Optional[str] = field()
+
+    model_name_or_path: str = field()
+
+    max_seq_length: Optional[int] = field(default=256)
 
     # PEFT Lora
     use_peft_lora: Optional[bool] = field(default=False)
@@ -37,10 +36,7 @@ class ModelArguments:
     # quantization 8bit
     use_8bit_quantization: Optional[bool] = field(default=False)
 
-@dataclass
-class DatasetArguments:
-    dataset_name_or_path: Optional[str] = field()
-    max_seq_length: Optional[int] = field(default=256)
+
 
 @dataclass
 class TrainArguments(TrainingArguments):
@@ -50,7 +46,6 @@ class TrainArguments(TrainingArguments):
     save_strategy: Union[IntervalStrategy, str] = field(default="no")
 
     evaluation_strategy: Union[IntervalStrategy, str] = field(default="no")
-    eval_steps: Optional[float] = field(default=500)
     eval_delay: Optional[float] = field(default=0)
 
     logging_strategy: Union[IntervalStrategy, str] = field(default="epoch")
