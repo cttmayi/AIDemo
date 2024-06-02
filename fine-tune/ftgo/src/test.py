@@ -1,7 +1,8 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 
 from src.utils.dataset import create_datasets
-from rouge import Rouge 
+from rouge import Rouge
+from tqdm import tqdm
 
 
 def create_model(model_name_or_path):
@@ -24,51 +25,54 @@ def generate(model, tokenizer, input_str, config:GenerationConfig=None):
     return output_str[len(input_str):]
 
 
-
-
-
-def process(model_name_or_path, dataset_name_or_path):
+def process(model_name_or_path, dataset_name_or_path, split='test', max_new_tokens=128):
     model, tokenizer = create_model(model_name_or_path)
+    dataset = create_datasets(dataset_name_or_path, split)
 
-    dataset = create_datasets(dataset_name_or_path, split="test")
+    if dataset is None:
+        print(f"Dataset({split}) not found.")
+    else:
+        config = GenerationConfig(
+            # temperature=0,
+            max_new_tokens=max_new_tokens,
+        )
 
-    config = GenerationConfig(
-        temperature=0,
-        max_new_tokens=16,
-    )
+        rouge = Rouge()
 
-    rouge = Rouge()
+        total = 0
+        correct = 0
 
-    total = 0
-    correct = 0
+        hyps = []
+        refs = []
+        errers = []
 
-    hyps = []
-    refs = []
+        for data in tqdm(dataset):
+            input = data[input_key]
+            label = data[label_key]
 
-    for data in dataset:
-        input = data[input_key]
-        label = data[label_key]
+            total += 1
 
-        total += 1
+            output = generate(model, tokenizer, input, config=config)
+            # print(f"Input: {input}")
+            # print(f"Label: {label}")
+            # print(f"Output: {output}")
+            hyps.append(output)
+            refs.append(label)
 
-        output = generate(model, tokenizer, input, config=config)
-        # print(f"Input: {input}")
-        # print(f"Label: {label}")
-        # print(f"Output: {output}")
-        hyps.append(output)
-        refs.append(label)
+            score = rouge.get_scores(output, label, avg=True)
+            # print(score)
 
-        score = rouge.get_scores(output, label, avg=True)
-        # print(score)
-
-        if label ==  output:
-            correct += 1
-        else:
-            print('ID:', total, 'output:', output, 'label:', label)
-    
-    scores = rouge.get_scores(hyps, refs, avg=True)
-    for key, score in scores.items():
-        print(f"{key}: {score}")
-    print(f"Accuracy: {correct/total*100}%")
+            if label ==  output:
+                correct += 1
+            else:
+                errers.append({'ID:': total, 'output': output, 'label': label})
+                pass
+        
+        scores = rouge.get_scores(hyps, refs, avg=True)
+        for key, score in scores.items():
+            print(f"{key}: {score}")
+        print(f"Accuracy: {int(correct/total*10000)/100}%")
+        for errer in errers:
+            print(errer)
 
 

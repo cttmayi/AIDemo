@@ -7,11 +7,8 @@ class T:
 
         self.tokenizer = tokenizer
         self.max_token = max_token
-        self.template_preprocess = {
-            'pt': self._pt_preprocess,
-            'sft': self._sft_preprocess
-        }
-        pass
+        self.template_preprocess = self._pt_preprocess
+
 
     def _pt_preprocess(self, samples):
         batch = []
@@ -19,6 +16,7 @@ class T:
             text = samples[prompt_key][id]
             batch.append(text)
         return {'text': batch}
+
 
     def _sft_preprocess(self, samples):
         batch_prompt = []

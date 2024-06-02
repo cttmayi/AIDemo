@@ -42,9 +42,9 @@ def process(basic_args:BasicArguments, training_args:TrainArguments):
         peft_config=peft_config,
         packing=False, # dataset_args.packing,
         dataset_text_field= 'text', # dataset_args.dataset_text_field,
-        # max_seq_length=dataset_args.max_seq_length,
+        max_seq_length=basic_args.max_seq_length,
         data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer, max_length=basic_args.max_seq_length),
-        callbacks=[BoardCallback()],
+        # callbacks=[BoardCallback()],
     )
     print('-' * 40, 'Model', '-' * 40)
     trainer.accelerator.print(f"{trainer.model}")

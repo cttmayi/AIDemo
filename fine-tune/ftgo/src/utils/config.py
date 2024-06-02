@@ -11,13 +11,6 @@ else:
 
 curdir = os.path.normpath(os.path.dirname(__file__))
 
-default_model_name = 'facebook/opt-125m'
-defualt_model_max_length = 128
-
-
-default_remote_dataset_name = None
-default_local_dataset_path = None
-
 
 
 

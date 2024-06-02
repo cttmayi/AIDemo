@@ -21,6 +21,7 @@ class BasicArguments:
     model_name_or_path: str = field()
 
     max_seq_length: Optional[int] = field(default=256)
+    prompt_max_seq_length: Optional[int] = field(default=240)
 
     # PEFT Lora
     use_peft_lora: Optional[bool] = field(default=False)
@@ -42,6 +43,7 @@ class BasicArguments:
 class TrainArguments(TrainingArguments):
     num_train_epochs: float = field(default=1.0)
     per_device_train_batch_size: int = field(default=4)
+    per_device_eval_batch_size: int = field(default=4)
 
     save_strategy: Union[IntervalStrategy, str] = field(default="no")
 
