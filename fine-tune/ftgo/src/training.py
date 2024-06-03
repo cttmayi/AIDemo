@@ -3,16 +3,10 @@ from transformers import set_seed
 from transformers import DataCollatorForSeq2Seq
 
 from src.utils.trainer import SFTTrainer
-
 from src.utils.model import create_model
 from src.utils.dataset import create_datasets
-
 from src.default import BasicArguments, TrainArguments
-
-from src.utils.callback import BoardCallback
-
-board_callback = BoardCallback()
-
+# from src.utils.callback import BoardCallback
 
 
 def process(basic_args:BasicArguments, training_args:TrainArguments):
@@ -25,8 +19,8 @@ def process(basic_args:BasicArguments, training_args:TrainArguments):
     # gradient ckpt
     model.config.use_cache = not training_args.gradient_checkpointing
     training_args.gradient_checkpointing = training_args.gradient_checkpointing
-    if training_args.gradient_checkpointing:
-        training_args.gradient_checkpointing_kwargs = {"use_reentrant": basic_args.use_reentrant}
+    # if training_args.gradient_checkpointing:
+    #     training_args.gradient_checkpointing_kwargs = {"use_reentrant": basic_args.use_reentrant}
 
     # datasets
     train_dataset = create_datasets(basic_args.dataset_name_or_path,)
@@ -43,7 +37,7 @@ def process(basic_args:BasicArguments, training_args:TrainArguments):
         packing=False, # dataset_args.packing,
         dataset_text_field= 'text', # dataset_args.dataset_text_field,
         max_seq_length=basic_args.max_seq_length,
-        data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer, max_length=basic_args.max_seq_length),
+        data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer),
         # callbacks=[BoardCallback()],
     )
     print('-' * 40, 'Model', '-' * 40)

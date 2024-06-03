@@ -5,13 +5,16 @@ IGNORE_INDEX = -100
 
 class SFTTrainer(trl.SFTTrainer):
 
-    def _prepare_non_packed_dataloader(self, *args, **kwargs):
-        tokenizer = kwargs.get("tokenizer", None)
-        dataset = kwargs.get("dataset", None)
-        if tokenizer is None:
-            tokenizer = args[0]
-        if dataset is None:
-            dataset = args[1]
+    def _prepare_non_packed_dataloader(
+        self,
+        tokenizer,
+        dataset,
+        dataset_text_field,
+        max_seq_length,
+        formatting_func=None,
+        add_special_tokens=True,
+        remove_unused_columns=True,
+    ):
 
         def preprocess_text(examples):
             model_inputs = {"input_ids": [], "attention_mask": [], "labels": []}
@@ -20,10 +23,10 @@ class SFTTrainer(trl.SFTTrainer):
                 text = examples["text"][i]
 
                 input_batch = tokenizer(text,
-                    add_special_tokens=True,
+                    add_special_tokens=add_special_tokens,
                     truncation=True,
                     padding=False,
-                    #max_length=max_seq_length,
+                    max_length=max_seq_length,
                     return_overflowing_tokens=False,
                     return_length=False,
                     return_tensors="pt"
@@ -39,7 +42,6 @@ class SFTTrainer(trl.SFTTrainer):
 
             #print('######')
             #print(model_inputs)
-
             return model_inputs
 
 
@@ -52,10 +54,10 @@ class SFTTrainer(trl.SFTTrainer):
                 # message = prompt + response + tokenizer.eos_token
 
                 source_batch = tokenizer(prompt,
-                    add_special_tokens=True,
+                    add_special_tokens=add_special_tokens,
                     truncation=True,
                     padding=False,
-                    #max_length=max_seq_length,
+                    max_length=max_seq_length-32,
                     return_overflowing_tokens=False,
                     return_length=False,
                     return_tensors="pt"
@@ -64,7 +66,7 @@ class SFTTrainer(trl.SFTTrainer):
                     add_special_tokens=False,
                     truncation=True,
                     padding=False,
-                    #max_length=max_seq_length,
+                    max_length=max_seq_length-32,
                     return_overflowing_tokens=False,
                     return_length=False,
                     return_tensors="pt"
@@ -78,8 +80,6 @@ class SFTTrainer(trl.SFTTrainer):
                 attention_mask = torch.ones(input_ids.shape, dtype=attention_mask.dtype)
                 labels = input_ids.clone()
                 labels[:source_ids.shape[0]] = IGNORE_INDEX
-                # input_ids[:] = IGNORE_INDEX
-                # labels[:] = IGNORE_INDEX
                 
                 # print('#####')
                 # print('s', source_ids, source_ids.dtype)
@@ -87,14 +87,12 @@ class SFTTrainer(trl.SFTTrainer):
                 # print('i', input_ids, input_ids.dtype)
                 # print('l', labels, labels.dtype)
                 # print('a', attention_mask, attention_mask.dtype)
-
                 model_inputs["input_ids"].append(input_ids)
                 model_inputs["attention_mask"].append(attention_mask)
                 model_inputs["labels"].append(labels)
 
             return model_inputs
 
-        # tokenized_dataset = super()._prepare_non_packed_dataloader(*args, **kwargs)
         preprocess_func = None
         if 'text' in dataset.column_names:
             preprocess_func = preprocess_text

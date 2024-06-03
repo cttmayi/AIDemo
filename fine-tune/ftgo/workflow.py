@@ -5,75 +5,38 @@ import os
 NO = 0
 YES = 1
 FORCE = 2
+CONTINUE = 3
 
-current_dir_path = os.path.dirname(os.path.abspath(__file__))
-
-# MODEL =================
-model_name_or_path_base = "facebook/opt-350m"
-model_path_train = "model/opt-350m"
-
-
-# FINETUNE PF ===========
-dataset_name_or_path_pt_base = os.path.join(current_dir_path, "data/example.jsonl")
-dataset_path_train_pt = "data/example/pt"
-dataset_template_pt = 'example_pt'
-dataset_test_data_size_pt = 0
-
-model_path_train_pt = model_path_train + "-pt"
-num_train_epochs_pt = 2
-
-# FINETUNE SFT ==========
-dataset_name_or_path_sft_base = os.path.join(current_dir_path, "data/example.jsonl")
-dataset_path_train_sft = "data/example/sft"
-dataset_template_sft = 'example_sft'
-dataset_test_data_size_sft = 0.1
-
-model_path_train_sft = model_path_train + "-sft"
-num_train_epochs_sft = 10
-
-# TRAIN Config ===========
-train_use_peft_lora = False
-train_batch_size = 4
-train_max_length = 512
-
-# TEST Config ============
-test_max_new_tokens = 16
-
-# Workflow Config: NO; YES; FORCE
-is_dataset_pt = YES
-is_dataset_sft = YES
-is_finetune_pt = NO
-is_finetune_sft = YES
+CURR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 def workflow(
     # MODEL =================
     model_name_or_path_base,
-    model_path_train = None,
+    model_path_train_base = None,
+    model_use_8bit_quantization = False,
 
+    # DATASET ===============
+    dataset_path_train_base = None,
 
-    # FINETUNE PF ===========
+    # TRAIN PT ===========
     dataset_name_or_path_pt_base = None,
-    dataset_path_train_pt = None,
     dataset_template_pt = None,
     dataset_test_data_size_pt = 0,
+    train_num_train_epochs_pt = 2,
 
-    model_path_train_pt = None,
-    num_train_epochs_pt = 2,
-
-    # FINETUNE SFT ==========
+    # TRAIN SFT ==========
     dataset_name_or_path_sft_base = None,
-    dataset_path_train_sft = None,
     dataset_template_sft = None,
     dataset_test_data_size_sft = 0.1,
-
-    model_path_train_sft = None,
-    num_train_epochs_sft = 10,
+    train_num_train_epochs_sft = 10,
 
     # TRAIN Config ===========
     train_use_peft_lora = False,
+    train_gradient_checkpointing = False,
     train_batch_size = 4,
     train_max_length = 512,
+
 
     # TEST Config ============
     test_max_new_tokens = 16,
@@ -83,76 +46,94 @@ def workflow(
     is_dataset_sft = NO,
     is_finetune_pt = NO,
     is_finetune_sft = NO,
+    is_test_dataset_test = YES,
+    is_test_dataset_train = NO,
+
 ):
+    # config
+    dataset_path_train_pt = dataset_path_train_base + "/pt"
+    dataset_path_train_sft = dataset_path_train_base + "/sft"
+    model_path_train_pt = model_path_train_base + "-pt"
+    model_path_train_sft = model_path_train_base + "-sft"
+
     # =====================================
+    model_path_train_last = model_name_or_path_base
+
+    if model_path_train_base is not None:
+        print("model process")
+        if not os.path.exists(model_path_train_base):
+            model.process(model_path_train_last, model_path_train_base)
+        model_path_train_last = model_path_train_base
+
     if is_dataset_pt != NO:
         print("dataset process for pt")
         if is_dataset_pt == FORCE or not os.path.exists(dataset_path_train_pt):
-            dataset.process(dataset_name_or_path_pt_base, dataset_path_train_pt, model_name_or_path_base, dataset_template_pt, dataset_test_data_size_pt)
+            dataset.process(dataset_name_or_path_pt_base, dataset_path_train_pt, model_path_train_last, dataset_template_pt, dataset_test_data_size_pt)
 
     if is_dataset_sft != NO:
         print("dataset process for sft")
         if is_dataset_sft == FORCE or not os.path.exists(dataset_path_train_sft):
-            dataset.process(dataset_name_or_path_sft_base, dataset_path_train_sft, model_name_or_path_base, dataset_template_sft, dataset_test_data_size_sft)
-
-
-    model_path_train_last = model_name_or_path_base
-
-    if model_path_train is not None:
-        print("model process")
-        if not os.path.exists(model_path_train):
-            model.process(model_path_train_last, model_path_train)
-        model_path_train_last = model_path_train
+            dataset.process(dataset_name_or_path_sft_base, dataset_path_train_sft, model_path_train_last, dataset_template_sft, dataset_test_data_size_sft)
 
     if is_finetune_pt != NO:
         print("train process pt")
-        if is_finetune_pt == FORCE or not os.path.exists(model_path_train_pt):
+        if is_finetune_pt >= FORCE or not os.path.exists(model_path_train_pt):
+            if is_finetune_pt == CONTINUE and os.path.exists(model_path_train_pt):
+                model_path_train_last = model_path_train_pt
             basic_args = default.BasicArguments(
                 dataset_name_or_path=dataset_path_train_pt,
                 model_name_or_path=model_path_train_last,
                 use_peft_lora=train_use_peft_lora,
                 max_seq_length=train_max_length,
+                use_8bit_quantization=model_use_8bit_quantization,
             )
             training_args = default.TrainArguments(
-                num_train_epochs = num_train_epochs_pt,
+                num_train_epochs = train_num_train_epochs_pt,
                 model_output_dir=model_path_train_pt,
                 per_device_eval_batch_size=train_batch_size,
                 per_device_train_batch_size=train_batch_size,
+                gradient_checkpointing = train_gradient_checkpointing,
             )
             training.process(basic_args, training_args)
         model_path_train_last = model_path_train_pt
 
     if is_finetune_sft != NO:
         print("train process sft")
-        if is_finetune_sft == FORCE or not os.path.exists(model_path_train_sft):
+        if is_finetune_sft >= FORCE or not os.path.exists(model_path_train_sft):
+            if is_finetune_sft == CONTINUE and os.path.exists(model_path_train_sft):
+                model_path_train_last = model_path_train_sft
             basic_args = default.BasicArguments(
                 dataset_name_or_path=dataset_path_train_sft,
                 model_name_or_path=model_path_train_last,
                 use_peft_lora=train_use_peft_lora,
                 max_seq_length=train_max_length,
+                use_8bit_quantization=model_use_8bit_quantization,
             )
             training_args = default.TrainArguments(
-                num_train_epochs=num_train_epochs_sft,
+                num_train_epochs=train_num_train_epochs_sft,
                 model_output_dir=model_path_train_sft,
                 evaluation_strategy="epoch",
                 per_device_eval_batch_size=train_batch_size,
                 per_device_train_batch_size=train_batch_size,
+                gradient_checkpointing = train_gradient_checkpointing,
             )
             training.process(basic_args, training_args)
         model_path_train_last = model_path_train_sft
 
     if is_finetune_pt != NO or is_finetune_sft != NO:
-        print("test process for test dataset")
-        test.process(
-            model_name_or_path=model_path_train_last,
-            dataset_name_or_path=dataset_path_train_sft,
-            split='test',
-            max_new_tokens=test_max_new_tokens,
-        )
-        print("test process for train dataset")
-        test.process(
-            model_name_or_path=model_path_train_last,
-            dataset_name_or_path=dataset_path_train_sft,
-            split='train',
-            max_new_tokens=test_max_new_tokens,
-        )
+        if is_test_dataset_test != NO:
+            print("test process for test dataset")
+            test.process(
+                model_name_or_path=model_path_train_last,
+                dataset_name_or_path=dataset_path_train_sft,
+                split='test',
+                max_new_tokens=test_max_new_tokens,
+            )
+        if is_test_dataset_train:
+            print("test process for train dataset")
+            test.process(
+                model_name_or_path=model_path_train_last,
+                dataset_name_or_path=dataset_path_train_sft,
+                split='train',
+                max_new_tokens=test_max_new_tokens,
+            )
