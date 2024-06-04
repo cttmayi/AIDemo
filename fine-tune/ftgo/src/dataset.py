@@ -50,7 +50,7 @@ def process(path:str, path_save:str, model_name_or_path, template_format=None, t
                                             remove_columns=split_dataset.column_names, 
                                             load_from_cache_file=False
                                             )
-        split_dataset.to_json(f"{path_save}/{split_name}.jsonl")
+        split_dataset.to_json(f"{path_save}/{split_name}.jsonl", force_ascii=False)
 
             #print(f"Size of the {split_name} set: {len(split_dataset)}.")
             #print(f"A sample of {split_name} dataset: {split_dataset[0]}")

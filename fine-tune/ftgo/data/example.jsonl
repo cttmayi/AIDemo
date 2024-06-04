@@ -97,14 +97,10 @@
 {"text":"97 dogs", "resp":"Ninety-seven Dogs."}
 {"text":"98 dogs", "resp":"Ninety-eight Dogs."}
 {"text":"99 dogs", "resp":"Ninety-nine Dogs."}
-{"text":"100 dogs", "resp":"One Hundred Dogs."}
-{"text":"101 dogs", "resp":"One Hundred-one Dogs."}
-{"text":"102 dogs", "resp":"One Hundred-two Dogs."}
-{"text":"103 dogs", "resp":"One Hundred-three Dogs."}
-{"text":"104 dogs", "resp":"One Hundred-four Dogs."}
-{"text":"105 dogs", "resp":"One Hundred-five Dogs."}
-{"text":"106 dogs", "resp":"One Hundred-six Dogs."}
-{"text":"107 dogs", "resp":"One Hundred-seven Dogs."}
-{"text":"108 dogs", "resp":"One Hundred-eight Dogs."}
-{"text":"109 dogs", "resp":"One Hundred-nine Dogs."}
+{"text":"100只狗", "resp":"One Hundred Dogs."}
+{"text":"101只狗", "resp":"One Hundred and One Dogs."}
+{"text":"102只狗", "resp":"One Hundred and Two Dogs."}
+{"text":"103只狗", "resp":"One Hundred and Three Dogs."}
+{"text":"104只狗", "resp":"One Hundred and Four Dogs."}
+{"text":"105只狗", "resp":"One Hundred and Five Dogs."}
 
