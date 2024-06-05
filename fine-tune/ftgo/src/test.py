@@ -30,7 +30,8 @@ def process(model_name_or_path, dataset_name_or_path, split='test', max_new_toke
     if device is None:
         device = default_device
 
-    model, tokenizer = create_model(model_name_or_path).to(device)
+    model, tokenizer = create_model(model_name_or_path)
+    model.to(device)
     dataset = create_datasets(dataset_name_or_path, split)
 
     if dataset is None:
@@ -39,6 +40,8 @@ def process(model_name_or_path, dataset_name_or_path, split='test', max_new_toke
         config = GenerationConfig(
             # temperature=0,
             max_new_tokens=max_new_tokens,
+            eos_token_id=tokenizer.eos_token_id,
+            pad_token_id=tokenizer.pad_token_id,
         )
 
         rouge = Rouge()

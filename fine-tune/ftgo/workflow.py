@@ -123,22 +123,22 @@ def workflow(
             training.process(basic_args, training_args)
         model_path_train_last = model_path_train_sft
 
-    if is_finetune_pt != NO or is_finetune_sft != NO:
-        if is_test_dataset_test != NO:
-            print("test process for test dataset")
-            test.process(
-                model_name_or_path=model_path_train_last,
-                dataset_name_or_path=dataset_path_train_sft,
-                split='test',
-                max_new_tokens=test_max_new_tokens,
-                device=model_device,
-            )
-        if is_test_dataset_train:
-            print("test process for train dataset")
-            test.process(
-                model_name_or_path=model_path_train_last,
-                dataset_name_or_path=dataset_path_train_sft,
-                split='train',
-                max_new_tokens=test_max_new_tokens,
-                device=model_device,
-            )
+    # if is_finetune_pt != NO or is_finetune_sft != NO:
+    if is_test_dataset_test != NO:
+        print("test process for test dataset")
+        test.process(
+            model_name_or_path=model_path_train_last,
+            dataset_name_or_path=dataset_path_train_sft,
+            split='test',
+            max_new_tokens=test_max_new_tokens,
+            device=model_device,
+        )
+    if is_test_dataset_train:
+        print("test process for train dataset")
+        test.process(
+            model_name_or_path=model_path_train_last,
+            dataset_name_or_path=dataset_path_train_sft,
+            split='train',
+            max_new_tokens=test_max_new_tokens,
+            device=model_device,
+        )
