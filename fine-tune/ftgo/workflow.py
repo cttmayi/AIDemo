@@ -46,7 +46,7 @@ def workflow(
     is_dataset_sft = NO,
     is_finetune_pt = NO,
     is_finetune_sft = NO,
-    is_test_dataset_test = YES,
+    is_test_dataset_test = NO,
     is_test_dataset_train = NO,
 
 ):

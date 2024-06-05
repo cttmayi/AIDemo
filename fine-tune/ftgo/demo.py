@@ -35,5 +35,7 @@ workflow(
     is_dataset_pt = YES,
     is_dataset_sft = YES,
     is_finetune_pt = NO,
-    is_finetune_sft = CONTINUE,
+    is_finetune_sft = NO,
+    is_test_dataset_train=NO,
+    is_test_dataset_test=NO
 )
