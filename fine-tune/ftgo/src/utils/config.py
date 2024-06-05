@@ -9,7 +9,6 @@ elif torch.cuda.is_available():
 else:
     default_device = 'cpu'
 
-curdir = os.path.normpath(os.path.dirname(__file__))
 
 
 

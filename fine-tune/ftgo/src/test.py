@@ -1,6 +1,7 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 
 from src.utils.dataset import create_datasets
+from src.utils.config import default_device
 from rouge import Rouge
 from tqdm import tqdm
 
@@ -25,8 +26,11 @@ def generate(model, tokenizer, input_str, config:GenerationConfig=None):
     return output_str[len(input_str):]
 
 
-def process(model_name_or_path, dataset_name_or_path, split='test', max_new_tokens=128):
-    model, tokenizer = create_model(model_name_or_path)
+def process(model_name_or_path, dataset_name_or_path, split='test', max_new_tokens=128, device=None):
+    if device is None:
+        device = default_device
+
+    model, tokenizer = create_model(model_name_or_path).to(device)
     dataset = create_datasets(dataset_name_or_path, split)
 
     if dataset is None:

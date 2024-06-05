@@ -15,6 +15,7 @@ def workflow(
     model_name_or_path_base,
     model_path_train_base = None,
     model_use_8bit_quantization = False,
+    model_device = None,
 
     # DATASET ===============
     dataset_path_train_base = None,
@@ -86,6 +87,7 @@ def workflow(
                 use_peft_lora=train_use_peft_lora,
                 max_seq_length=train_max_length,
                 use_8bit_quantization=model_use_8bit_quantization,
+                use_cpu=(model_device == "cpu"),
             )
             training_args = default.TrainArguments(
                 num_train_epochs = train_num_train_epochs_pt,
@@ -93,6 +95,7 @@ def workflow(
                 per_device_eval_batch_size=train_batch_size,
                 per_device_train_batch_size=train_batch_size,
                 gradient_checkpointing = train_gradient_checkpointing,
+                use_cpu=(model_device == "cpu"),
             )
             training.process(basic_args, training_args)
         model_path_train_last = model_path_train_pt
@@ -128,6 +131,7 @@ def workflow(
                 dataset_name_or_path=dataset_path_train_sft,
                 split='test',
                 max_new_tokens=test_max_new_tokens,
+                device=model_device,
             )
         if is_test_dataset_train:
             print("test process for train dataset")
@@ -136,4 +140,5 @@ def workflow(
                 dataset_name_or_path=dataset_path_train_sft,
                 split='train',
                 max_new_tokens=test_max_new_tokens,
+                device=model_device,
             )
