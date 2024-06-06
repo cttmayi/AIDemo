@@ -37,6 +37,13 @@ def workflow(
     train_gradient_checkpointing = False,
     train_batch_size = 4,
     train_max_length = 512,
+    # train_use_early_stopping = True,
+
+    # LORA Config ============
+    train_lora_target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+    train_lora_r = 4,
+    train_lora_alpha = 32,
+    train_lora_dropout = 0.1,
 
 
     # TEST Config ============
@@ -61,7 +68,7 @@ def workflow(
     model_path_train_last = model_name_or_path_base
 
     if model_path_train_base is not None:
-        print("model process")
+        print("model process for local")
         if not os.path.exists(model_path_train_base):
             model.process(model_path_train_last, model_path_train_base)
         model_path_train_last = model_path_train_base
@@ -77,7 +84,7 @@ def workflow(
             dataset.process(dataset_name_or_path_sft_base, dataset_path_train_sft, model_path_train_last, dataset_template_sft, dataset_test_data_size_sft)
 
     if is_finetune_pt != NO:
-        print("train process pt")
+        print("train process for pt")
         if is_finetune_pt >= FORCE or not os.path.exists(model_path_train_pt):
             if is_finetune_pt == CONTINUE and os.path.exists(model_path_train_pt):
                 model_path_train_last = model_path_train_pt
@@ -88,6 +95,11 @@ def workflow(
                 max_seq_length=train_max_length,
                 use_8bit_quantization=model_use_8bit_quantization,
                 use_cpu=(model_device == "cpu"),
+
+                lora_target_modules=train_lora_target_modules,
+                lora_r=train_lora_r,
+                lora_alpha=train_lora_alpha,
+                lora_dropout=train_lora_dropout,
             )
             training_args = default.TrainArguments(
                 num_train_epochs = train_num_train_epochs_pt,
@@ -101,7 +113,7 @@ def workflow(
         model_path_train_last = model_path_train_pt
 
     if is_finetune_sft != NO:
-        print("train process sft")
+        print("train process for sft")
         if is_finetune_sft >= FORCE or not os.path.exists(model_path_train_sft):
             if is_finetune_sft == CONTINUE and os.path.exists(model_path_train_sft):
                 model_path_train_last = model_path_train_sft
@@ -111,14 +123,22 @@ def workflow(
                 use_peft_lora=train_use_peft_lora,
                 max_seq_length=train_max_length,
                 use_8bit_quantization=model_use_8bit_quantization,
+
+                lora_target_modules=train_lora_target_modules,
+                lora_r=train_lora_r,
+                lora_alpha=train_lora_alpha,
+                lora_dropout=train_lora_dropout,
             )
             training_args = default.TrainArguments(
                 num_train_epochs=train_num_train_epochs_sft,
                 model_output_dir=model_path_train_sft,
                 evaluation_strategy="epoch",
+                #save_strategy="epoch",
+                #save_total_limit=2,
                 per_device_eval_batch_size=train_batch_size,
                 per_device_train_batch_size=train_batch_size,
                 gradient_checkpointing = train_gradient_checkpointing,
+                #load_best_model_at_end = True,
             )
             training.process(basic_args, training_args)
         model_path_train_last = model_path_train_sft

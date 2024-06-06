@@ -1,6 +1,6 @@
 
 from transformers import set_seed
-from transformers import DataCollatorForSeq2Seq
+from transformers import DataCollatorForSeq2Seq, EarlyStoppingCallback
 
 from src.utils.trainer import SFTTrainer
 from src.utils.model import create_model
@@ -38,7 +38,7 @@ def process(basic_args:BasicArguments, training_args:TrainArguments):
         dataset_text_field= 'text', # dataset_args.dataset_text_field,
         max_seq_length=basic_args.max_seq_length,
         data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer),
-        # callbacks=[BoardCallback()],
+        callbacks=[EarlyStoppingCallback()],
     )
     print('-' * 40, 'Model', '-' * 40)
     trainer.accelerator.print(f"{trainer.model}")

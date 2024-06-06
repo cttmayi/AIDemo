@@ -28,7 +28,7 @@ class BasicArguments:
     lora_alpha: Optional[int] = field(default=4)
     lora_dropout: Optional[float] = field(default=0.1)
     lora_r: Optional[int] = field(default=64)
-    lora_target_modules: Optional[str] = field(default= None) # default="q_proj,k_proj,v_proj,o_proj,down_proj,up_proj,gate_proj",
+    lora_target_modules: Optional[List] = field(default= None) # default="q_proj,k_proj,v_proj,o_proj,down_proj,up_proj,gate_proj",
 
     # flash attention
     use_flash_attn: Optional[bool] = field(default=False)
