@@ -43,7 +43,11 @@ def _load_dataset(file_path, test_size):
         dataset = datasets.load_dataset(file_path)
 
     if len(dataset.keys()) == 1:
-        if test_size != 0:
+
+        if test_size == 1:
+            dataset['test'] = dataset['train']
+            del dataset['train']
+        elif test_size > 0:
             dataset = dataset['train'].train_test_split(test_size=test_size, seed=0)
     else:
         print("Dataset has multiple splits, ignore test_size argument")

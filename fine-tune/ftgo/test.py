@@ -12,7 +12,7 @@ workflow(
     dataset_path_train_base = "data/test",
 
     # FINETUNE PF ===========
-    dataset_name_or_path_pt_base = os.path.join(CURR_PATH, "data/example"),
+    dataset_name_or_path_pt = os.path.join(CURR_PATH, "data/example"),
     #dataset_template_pt = 'example_pt',
     # dataset_test_data_size_pt = 0,
     train_num_train_epochs_pt = 1,

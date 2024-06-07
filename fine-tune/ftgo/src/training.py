@@ -38,7 +38,7 @@ def process(basic_args:BasicArguments, training_args:TrainArguments):
         dataset_text_field= 'text', # dataset_args.dataset_text_field,
         max_seq_length=basic_args.max_seq_length,
         data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer),
-        callbacks=[EarlyStoppingCallback()],
+        # callbacks=[EarlyStoppingCallback()],
     )
     print('-' * 40, 'Model', '-' * 40)
     trainer.accelerator.print(f"{trainer.model}")
@@ -63,4 +63,4 @@ def process(basic_args:BasicArguments, training_args:TrainArguments):
     # saving final model
     if trainer.is_fsdp_enabled:
         trainer.accelerator.state.fsdp_plugin.set_state_dict_type("FULL_STATE_DICT")
-    trainer.save_model(output_dir=training_args.model_output_dir)
+    trainer.save_model(output_dir=basic_args.model_output_dir)

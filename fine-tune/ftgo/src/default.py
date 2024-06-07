@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
-from transformers import TrainingArguments
+#from transformers import TrainingArguments
+import transformers 
 
 from transformers.trainer_utils import (
     EvaluationStrategy,
@@ -10,6 +11,23 @@ from transformers.trainer_utils import (
     SchedulerType,
 )
 
+
+@dataclass
+class TrainArguments(transformers.TrainingArguments):
+    num_train_epochs: float = field(default=1.0)
+    per_device_train_batch_size: int = field(default=4)
+    per_device_eval_batch_size: int = field(default=4)
+
+    save_strategy: Union[IntervalStrategy, str] = field(default="no")
+    evaluation_strategy: Union[IntervalStrategy, str] = field(default="no")
+
+    eval_delay: Optional[float] = field(default=0)
+
+    logging_strategy: Union[IntervalStrategy, str] = field(default="epoch")
+
+    output_dir: str = field(default='./output')
+    
+
 @dataclass
 class BasicArguments:
     """
@@ -18,7 +36,7 @@ class BasicArguments:
 
     dataset_name_or_path: Optional[str] = field()
 
-    model_name_or_path: str = field()
+    model_name_or_path: Optional[str] = field()
 
     max_seq_length: Optional[int] = field(default=256)
     prompt_max_seq_length: Optional[int] = field(default=240)
@@ -37,22 +55,8 @@ class BasicArguments:
     # quantization 8bit
     use_8bit_quantization: Optional[bool] = field(default=False)
 
-
-
-@dataclass
-class TrainArguments(TrainingArguments):
-    num_train_epochs: float = field(default=1.0)
-    per_device_train_batch_size: int = field(default=4)
-    per_device_eval_batch_size: int = field(default=4)
-
-    save_strategy: Union[IntervalStrategy, str] = field(default="no")
-
-    evaluation_strategy: Union[IntervalStrategy, str] = field(default="no")
-    eval_delay: Optional[float] = field(default=0)
-
-    logging_strategy: Union[IntervalStrategy, str] = field(default="epoch")
-
-    output_dir: str = field(default='./output')
     model_output_dir: str = field(default=None)
 
-    
+
+    def check_and_fill_args(self, training_args:TrainArguments):
+        pass

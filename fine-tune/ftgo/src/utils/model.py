@@ -52,6 +52,5 @@ def create_model(model_args:BasicArguments):
         )
 
     tokenizer = AutoTokenizer.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
-    # tokenizer.pad_token = tokenizer.eos_token
 
     return model, peft_config, tokenizer
