@@ -1,12 +1,13 @@
 
 from transformers import set_seed
-from transformers import DataCollatorForSeq2Seq, EarlyStoppingCallback
+from transformers import DataCollatorForSeq2Seq
+# from transformers import EarlyStoppingCallback
 
 from src.utils.trainer import SFTTrainer
 from src.utils.model import create_model
 from src.utils.dataset import create_datasets
 from src.default import BasicArguments, TrainArguments
-# from src.utils.callback import BoardCallback
+from src.utils.callback import EarlyStoppingCallback
 
 
 def process(basic_args:BasicArguments, training_args:TrainArguments):

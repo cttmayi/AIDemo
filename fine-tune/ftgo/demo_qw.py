@@ -9,7 +9,7 @@ workflow(
     project_name="demo",
     # MODEL =================
     model_name_or_path_base = "Qwen/Qwen1.5-0.5B",
-    model_device='cpu',
+    model_device='mps',
 
     # TRAIN Config ===========
     train_use_peft_lora = True,
@@ -38,7 +38,7 @@ workflow(
     dataset_test_data_size_sft = 0.1,
 
     training_args_sft = default.TrainArguments(
-        num_train_epochs=1,
+        num_train_epochs=10,
         per_device_train_batch_size=4,
     ),
 
@@ -53,7 +53,7 @@ workflow(
     is_dataset_sft = YES,
     is_dataset_test = YES,
     is_finetune_pt = YES,
-    is_finetune_sft = YES,
+    is_finetune_sft = FORCE,
     is_test_dataset_train=YES,
     is_test_dataset_test=YES
 )

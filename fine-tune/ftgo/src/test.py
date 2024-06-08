@@ -16,8 +16,8 @@ input_key = "prompt"
 label_key = "response"
 
 
-def generate(model, tokenizer, input_str, config:GenerationConfig=None):
-    input_ids = tokenizer.encode(input_str, return_tensors="pt")
+def generate(model, tokenizer, input_str, config:GenerationConfig=None, device=None):
+    input_ids = tokenizer.encode(input_str, return_tensors="pt").to(device)
     output_ids = model.generate(input_ids, config)
 
     input_str = tokenizer.decode(input_ids[0])
@@ -56,7 +56,7 @@ def process(model_name_or_path, dataset_name_or_path, split='test', max_new_toke
 
             total += 1
 
-            output = generate(model, tokenizer, input, config=config)
+            output = generate(model, tokenizer, input, config=config, device=device)
             # print(f"Input: {input}")
             # print(f"Label: {label}")
             # print(f"Output: {output}")
