@@ -48,12 +48,12 @@ workflow(
 
     test_max_new_tokens = 16,
 
-    # Workflow Config: NO; YES; FORCE
+    # Workflow Config: NO; YES; FORCE; CONTINUE
     is_dataset_pt = YES,
     is_dataset_sft = YES,
     is_dataset_test = YES,
-    is_finetune_pt = YES,
-    is_finetune_sft = FORCE,
+    is_finetune_pt = NO,
+    is_finetune_sft = YES,
     is_test_dataset_train=YES,
     is_test_dataset_test=YES
 )

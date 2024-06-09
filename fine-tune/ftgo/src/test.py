@@ -27,6 +27,7 @@ def generate(model, tokenizer, input_str, config:GenerationConfig=None, device=N
 
 
 def process(model_name_or_path, dataset_name_or_path, split='test', max_new_tokens=128, device=None):
+    device = 'cpu' if device == 'mps' else device 
     model, tokenizer = create_model(model_name_or_path)
     model.to(device)
     dataset = create_datasets(dataset_name_or_path, split)
