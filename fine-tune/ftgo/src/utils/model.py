@@ -53,4 +53,8 @@ def create_model(model_args:BasicArguments):
 
     tokenizer = AutoTokenizer.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
 
+    # print(f"Model: {model_args.model_name_or_path}")
+    print('Memory Footprint:', model.get_memory_footprint()/1e9, 'GB')
+
+
     return model, peft_config, tokenizer
