@@ -4,10 +4,12 @@
 
 .env
 .vscode
+.DS_Store
 
 /data/
 /model/
 /board/
 /output/
+/workspace/
 
 local_cache/
