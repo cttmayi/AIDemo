@@ -1,5 +1,5 @@
 import datasets
-import templates
+from templates.base import BASE
 from pathlib import Path
 import os
 from datasets import Dataset 
@@ -21,11 +21,7 @@ def _load_directory(dir_path):
     return json_lines
 
 def lines_to_json(json_lines, path_save):
-    split_name = 'train'
-    if not os.path.exists(path_save):
-        os.makedirs(path_save)
-    
-    with open(f"{path_save}/{split_name}.jsonl", "w") as f:
+    with open(path_save, 'w') as f:
         for json_line in json_lines:
             f.write(json.dumps(json_line))
             f.write('\n')
@@ -55,28 +51,30 @@ def _load_dataset(file_path, test_size):
     return dataset
 
 
-def process(path:str, path_save:str, model_name_or_path, template_format=None, test_size=0):
+def process(path:str, path_save:str, model_name_or_path, template:BASE=None, test_size=0):
     tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, trust_remote_code=True)
 
-    template_preprocess = {}
-    if template_format is not None:
-        template_file = templates.load_templates(template_format)
-        if template_file is not None:
-            template = template_file.T(tokenizer, 512)
-            # print(template)
-            template_preprocess = template.template_preprocess
-        else:
-            raise ValueError(f"Template {template_format} not found")
+    template_preprocess = None
+    if template is not None:
+        template.config(tokenizer=tokenizer)
+        template_preprocess = template.preprocess
 
     is_directory = Path(path).is_dir()
 
+    if not os.path.exists(path_save):
+        os.makedirs(path_save)
+
     if is_directory:
         json_lines = _load_directory(path)
-        lines_to_json(json_lines, path_save)
+        path = os.path.join(path_save, '_temp.jsonl')
+        print(path, '#####')
+        lines_to_json(json_lines,  path)
 
-    else:
-        dataset = _load_dataset(path, test_size)
-        for split_name, split_dataset in dataset.items():
+
+    dataset = _load_dataset(path, test_size)
+    for split_name, split_dataset in dataset.items():
+
+        if template_preprocess is not None:
             split_dataset:Dataset
             split_dataset = split_dataset.map(template_preprocess, 
                                                 batched=True, 
