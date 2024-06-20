@@ -10,7 +10,8 @@ CONTINUE = 3
 
 CURR_PATH = os.path.dirname(os.path.abspath(__file__))
 
-CACHE = os.path.join(CURR_PATH, "local_cache")
+# CACHE = os.path.join(CURR_PATH, "local_cache")
+CACHE = "cache"
 
 if not os.path.exists(CACHE):
     os.makedirs(CACHE)
