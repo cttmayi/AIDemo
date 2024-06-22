@@ -29,7 +29,7 @@ workflow(
 
     training_args_pt = default.TrainArguments(
         num_train_epochs=1,
-        per_device_train_batch_size=4,
+        per_device_train_batch_size=1,
     ),
 
     # FINETUNE SFT ==========
@@ -49,10 +49,10 @@ workflow(
     test_max_new_tokens = 16,
 
     # Workflow Config: NO; YES; FORCE; CONTINUE
-    is_dataset_pt = FORCE,
-    is_dataset_sft = FORCE,
-    is_dataset_test = FORCE,
-    is_finetune_pt = NO,
+    is_dataset_pt = YES,
+    is_dataset_sft = YES,
+    is_dataset_test = YES,
+    is_finetune_pt = FORCE,
     is_finetune_sft = NO,
     is_test_dataset_train=NO,
     is_test_dataset_test=NO

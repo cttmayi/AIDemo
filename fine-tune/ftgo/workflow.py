@@ -129,7 +129,7 @@ def workflow(
                 model_output_dir=model_path_train_pt,
             )
             
-            training_args_pt.per_device_train_batch_size=training_args_pt.per_device_eval_batch_size
+            # training_args_pt.per_device_train_batch_size=training_args_pt.per_device_eval_batch_size
             training_args_pt.use_cpu=(model_device == "cpu")
 
             training.process(basic_args, training_args_pt)

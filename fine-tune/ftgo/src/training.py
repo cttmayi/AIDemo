@@ -41,8 +41,8 @@ def process(basic_args:BasicArguments, training_args:TrainArguments):
         data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer),
         # callbacks=[EarlyStoppingCallback()],
     )
-    print('-' * 40, 'Model', '-' * 40)
-    trainer.accelerator.print(f"{trainer.model}")
+    #print('-' * 40, 'Model', '-' * 40)
+    #trainer.accelerator.print(f"{trainer.model}")
     # print(trainer.model.config)
     print('-' * 40, 'Trainable Parameters', '-' * 40)
     try:
