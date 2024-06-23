@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
 #from transformers import TrainingArguments
 import transformers 
+import torch
 
 from transformers.trainer_utils import (
     EvaluationStrategy,
@@ -57,6 +58,15 @@ class BasicArguments:
 
     model_output_dir: str = field(default=None)
 
+    callbacks: Optional[List] = field(default=None)
+
 
     def check_and_fill_args(self, training_args:TrainArguments):
         pass
+
+if torch.backends.mps.is_available():
+    default_device = 'mps'
+elif torch.cuda.is_available():
+    default_device = 'cuda'
+else:
+    default_device = 'cpu'

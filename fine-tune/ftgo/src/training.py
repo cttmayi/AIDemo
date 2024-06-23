@@ -7,7 +7,7 @@ from src.utils.trainer import SFTTrainer
 from src.utils.model import create_model
 from src.utils.dataset import create_datasets
 from src.default import BasicArguments, TrainArguments
-from src.utils.callback import EarlyStoppingCallback
+from src.utils.callback import BestSaveCallback # EarlyStoppingCallback
 
 
 def process(basic_args:BasicArguments, training_args:TrainArguments):
@@ -39,7 +39,7 @@ def process(basic_args:BasicArguments, training_args:TrainArguments):
         dataset_text_field= 'text', # dataset_args.dataset_text_field,
         max_seq_length=basic_args.max_seq_length,
         data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer),
-        # callbacks=[EarlyStoppingCallback()],
+        callbacks=basic_args.callbacks,    # [BestSaveCallback()],
     )
     #print('-' * 40, 'Model', '-' * 40)
     #trainer.accelerator.print(f"{trainer.model}")
