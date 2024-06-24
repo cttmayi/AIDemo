@@ -35,7 +35,7 @@ def workflow(
     dataset_test_data_size_pt = 0,
 
     training_use_peft_lora_pt = False,
-    training_max_length_pt = 512,
+    training_max_length_pt = None,
     training_args_pt: default.TrainArguments = None,
 
     # TRAIN SFT ==========
@@ -45,7 +45,7 @@ def workflow(
 
     training_use_best_sft = False,
     training_use_peft_lora_sft = False,
-    training_max_length_sft = 512,
+    training_max_length_sft = None,
     training_args_sft: default.TrainArguments = None,
 
     # TRAIN Config ===========
