@@ -54,6 +54,6 @@ workflow(
     is_dataset_test = YES,
     is_finetune_pt = YES,
     is_finetune_sft = FORCE,
+    is_test_dataset_test=YES,
     is_test_dataset_train=NO,
-    is_test_dataset_test=YES
 )
