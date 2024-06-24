@@ -65,3 +65,6 @@ def process(basic_args:BasicArguments, training_args:TrainArguments):
     if trainer.is_fsdp_enabled:
         trainer.accelerator.state.fsdp_plugin.set_state_dict_type("FULL_STATE_DICT")
     trainer.save_model(output_dir=basic_args.model_output_dir)
+
+    #if basic_args.use_peft_lora:
+    #    trainer.model.save_pretrained(save_directory=basic_args.model_output_dir)

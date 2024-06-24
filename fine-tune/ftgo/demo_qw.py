@@ -38,7 +38,7 @@ workflow(
     training_use_peft_lora_sft = True,
     training_max_length_sft = 512,
     training_args_sft = default.TrainArguments(
-        num_train_epochs=10,
+        num_train_epochs=2,
         per_device_train_batch_size=4,
     ),
 
@@ -53,7 +53,7 @@ workflow(
     is_dataset_sft = YES,
     is_dataset_test = YES,
     is_finetune_pt = YES,
-    is_finetune_sft = FORCE,
-    is_test_dataset_test=YES,
+    is_finetune_sft = CONTINUE,
+    is_test_dataset_test=NO,
     is_test_dataset_train=NO,
 )
