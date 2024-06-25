@@ -27,6 +27,7 @@ def workflow(
     # MODEL =================
     model_name_or_path_base = None,
     model_use_8bit_quantization = False,
+    model_use_4bit_quantization = False,
     model_device = None,
 
     # TRAIN PT ===========
@@ -133,6 +134,7 @@ def workflow(
                 use_peft_lora=training_use_peft_lora_pt,
                 max_seq_length=training_max_length_pt,
                 use_8bit_quantization=model_use_8bit_quantization,
+                use_4bit_quantization=model_use_4bit_quantization,
 
                 lora_target_modules=train_lora_target_modules,
                 lora_r=train_lora_r,
@@ -161,6 +163,7 @@ def workflow(
                 use_peft_lora=training_use_peft_lora_sft,
                 max_seq_length=training_max_length_sft,
                 use_8bit_quantization=model_use_8bit_quantization,
+                use_4bit_quantization=model_use_4bit_quantization,
 
                 lora_target_modules=train_lora_target_modules,
                 lora_r=train_lora_r,

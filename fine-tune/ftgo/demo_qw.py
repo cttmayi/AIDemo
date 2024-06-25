@@ -8,8 +8,9 @@ from templates.example import SFT, PT
 workflow(
     project_name="demo",
     # MODEL =================
-    model_name_or_path_base = "Qwen/Qwen1.5-0.5B",
+    model_name_or_path_base = "Qwen/Qwen2-7B",
     model_device='auto',
+    model_use_8bit_quantization = False,
 
     # LORA Config =============
     train_lora_target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],

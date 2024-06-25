@@ -13,25 +13,25 @@ from peft import PeftConfig, PeftModel, get_peft_model, prepare_model_for_kbit_t
 
 def create_model(model_args:BasicArguments):
     bnb_config = None
-    quant_storage_dtype = None
+    quant_storage_dtype:torch.dtype = None
 
     if model_args.use_4bit_quantization:
-        compute_dtype = getattr(torch, model_args.bnb_4bit_compute_dtype)
-        quant_storage_dtype = getattr(torch, model_args.bnb_4bit_quant_storage_dtype)
+        #compute_dtype = getattr(torch, model_args.bnb_4bit_compute_dtype)
+        # quant_storage_dtype = getattr(torch, model_args.bnb_4bit_quant_storage_dtype)
 
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=model_args.use_4bit_quantization,
-            bnb_4bit_quant_type=model_args.bnb_4bit_quant_type,
-            bnb_4bit_compute_dtype=compute_dtype,
-            bnb_4bit_use_double_quant=model_args.bnb_4bit_use_nested_quant,
-            bnb_4bit_quant_storage=quant_storage_dtype,
+            bnb_4bit_quant_type='nf4', # fp4
+            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_storage=torch.uint8,
         )
     elif model_args.use_8bit_quantization:
-        bnb_config = BitsAndBytesConfig(load_in_8bit=model_args.use_8bit_quantization)
+        bnb_config = BitsAndBytesConfig(
+            load_in_8bit=model_args.use_8bit_quantization,
+        )
 
-    torch_dtype = (
-        quant_storage_dtype if quant_storage_dtype and quant_storage_dtype.is_floating_point else torch.float32
-    )
+    torch_dtype = torch.float32
 
 
     peft_config = None
@@ -51,7 +51,8 @@ def create_model(model_args:BasicArguments):
         quantization_config=bnb_config,
         trust_remote_code=True,
         attn_implementation="flash_attention_2" if model_args.use_flash_attn else "eager",
-        torch_dtype=torch_dtype,
+        torch_dtype=torch_dtype, #这个形参可以设置模型中全部 Linear 层的数据格式，torch_dtype=torch.float16 可以使用如下把32位的模型线性层参数转换为16位的模型参数. 但是除线性层之外的所有参数仍为32位浮点数
+        # device_map="auto",
     )
 
     if peft_config:
