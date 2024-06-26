@@ -61,13 +61,13 @@ def process(path:str, path_save:str, model_name_or_path, template:BASE=None, tes
 
     is_directory = Path(path).is_dir()
 
-    if not os.path.exists(path_save):
-        os.makedirs(path_save)
+
 
     if is_directory:
+        if not os.path.exists(path_save):
+            os.makedirs(path_save)
         json_lines = _load_directory(path)
         path = os.path.join(path_save, '_temp.jsonl')
-        print(path, '#####')
         lines_to_json(json_lines,  path)
 
 

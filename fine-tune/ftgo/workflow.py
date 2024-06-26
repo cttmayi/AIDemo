@@ -14,12 +14,12 @@ CURR_PATH = os.path.dirname(os.path.abspath(__file__))
 # CACHE = os.path.join(CURR_PATH, "local_cache")
 CACHE = "cache"
 
-MODEL_CACHE = os.path.join(CACHE, "model")
+MODEL_CACHE = None # os.path.join(CACHE, "model")
 
 PROJECT_CACHE = os.path.join(CACHE, "project")
 
 for path in [CACHE, MODEL_CACHE, PROJECT_CACHE]:
-    if not os.path.exists(path):
+    if path and not os.path.exists(path):
         os.makedirs(path)
 
 def workflow(
