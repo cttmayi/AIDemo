@@ -65,6 +65,10 @@ def process(basic_args:BasicArguments, training_args:TrainArguments):
     if trainer.is_fsdp_enabled:
         trainer.accelerator.state.fsdp_plugin.set_state_dict_type("FULL_STATE_DICT")
     trainer.save_model(output_dir=basic_args.model_output_dir)
+    print('best_model_checkpoint=', trainer.state.best_model_checkpoint, 'best_metric=',  trainer.state.best_metric)
+    return trainer.state.best_model_checkpoint, trainer.state.best_metric
+
+
 
     #if basic_args.use_peft_lora:
     #    trainer.model.save_pretrained(save_directory=basic_args.model_output_dir)

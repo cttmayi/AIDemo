@@ -1,8 +1,16 @@
-from src import dataset, model, training, test
+from src import dataset, model, training, test, user
 from src import default
 import os
 
 from src.utils.callback import BestSaveCallback # EarlyStoppingCallback
+
+from transformers.trainer_utils import (
+    EvaluationStrategy,
+    FSDPOption,
+    HubStrategy,
+    IntervalStrategy,
+    SchedulerType,
+)
 
 NO = 0
 YES = 1
@@ -44,6 +52,7 @@ def workflow(
     dataset_template_sft = None,
     dataset_test_data_size_sft = 0.1,
 
+    training_repeat_sft = 1,
     training_use_best_sft = False,
     training_use_peft_lora_sft = False,
     training_max_length_sft = None,
@@ -74,6 +83,7 @@ def workflow(
     is_finetune_sft = NO,
     is_test_dataset_test = NO,
     is_test_dataset_train = NO,
+    is_test_user = NO,
 
 ):
     # config
@@ -152,6 +162,8 @@ def workflow(
             training.process(basic_args, training_args_pt)
         model_path_train_last = model_path_train_pt
 
+    # for _ in range(training_repeat_sft):
+
     if is_finetune_sft != NO:
         print("### train process for sft")
         if is_finetune_sft >= FORCE or not os.path.exists(model_path_train_sft):
@@ -173,14 +185,15 @@ def workflow(
             )
 
             if dataset_test_data_size_sft > 0:
-                training_args_sft.evaluation_strategy="epoch"
+                training_args_sft.evaluation_strategy = IntervalStrategy.EPOCH
             training_args_sft.per_device_eval_batch_size=training_args_sft.per_device_train_batch_size
             training_args_sft.use_cpu=(model_device == "cpu")
 
 
             if training_use_best_sft:
-                basic_args.callbacks = [BestSaveCallback()]
+                # basic_args.callbacks = [BestSaveCallback()]
                 training_args_sft.save_total_limit = 1
+                training_args_sft.save_strategy = IntervalStrategy.EPOCH
                 training_args_sft.load_best_model_at_end = True
                 training_args_sft.metric_for_best_model = 'eval_loss'
 
@@ -188,10 +201,8 @@ def workflow(
         model_path_train_last = model_path_train_sft
 
 
-
-# test process
+    # test process
     if is_test_dataset_test != NO:
-
         print("test process for test dataset")
         test.process(
             model_name_or_path=model_path_train_last,
@@ -200,12 +211,21 @@ def workflow(
             max_new_tokens=test_max_new_tokens,
             device=model_device,
         )
+
     if is_test_dataset_train:
         print("test process for train dataset")
         test.process(
             model_name_or_path=model_path_train_last,
             dataset_name_or_path=dataset_path_test_last,
             split='train',
+            max_new_tokens=test_max_new_tokens,
+            device=model_device,
+        )
+    
+    if is_test_user:
+        print("test process for user")
+        user.process(
+            model_name_or_path=model_path_train_last,
             max_new_tokens=test_max_new_tokens,
             device=model_device,
         )

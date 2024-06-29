@@ -59,17 +59,12 @@ def process(path:str, path_save:str, model_name_or_path, template:BASE=None, tes
         template.config(tokenizer=tokenizer)
         template_preprocess = template.preprocess
 
-    is_directory = Path(path).is_dir()
-
-
-
-    if is_directory:
+    if Path(path).is_dir() and Path(path).exists():
         if not os.path.exists(path_save):
             os.makedirs(path_save)
         json_lines = _load_directory(path)
         path = os.path.join(path_save, '_temp.jsonl')
         lines_to_json(json_lines,  path)
-
 
     dataset = _load_dataset(path, test_size)
     for split_name, split_dataset in dataset.items():
