@@ -13,7 +13,7 @@ import logging, sys
 workflow(
     project_name="poetry",
     # MODEL =================
-    model_name_or_path_base = "Qwen/Qwen1.5-1.8B",
+    model_name_or_path_base = "Qwen/Qwen1.5-0.5B",
     model_device='mps',
     model_use_8bit_quantization = False,
 
@@ -59,7 +59,7 @@ workflow(
     is_dataset_sft = YES,
     is_dataset_test = NO,
     is_finetune_pt = NO,
-    is_finetune_sft = YES,
+    is_finetune_sft = FORCE,
     is_test_dataset_test = NO,
     is_test_dataset_train = NO,
     is_test_user=YES,
