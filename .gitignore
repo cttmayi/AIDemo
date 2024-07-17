@@ -13,3 +13,5 @@
 /workspace/
 
 /cache/
+/rag/graph/cache/
+/rag/graph/output/
