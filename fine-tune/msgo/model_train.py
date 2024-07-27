@@ -34,16 +34,16 @@ def encode(example):
     # print(example)
     return example
 
-train_dataset = MsDataset.load('json', data_files=[cfg.local_dataset_path_train]).to_hf_dataset()
-val_dataset = MsDataset.load('json', data_files=[cfg.local_dataset_path_test]).to_hf_dataset()
+#train_dataset = MsDataset.load('json', data_files=[cfg.local_dataset_path_train]).to_hf_dataset()
+#val_dataset = MsDataset.load('json', data_files=[cfg.local_dataset_path_test]).to_hf_dataset()
+#train_dataset = train_dataset.map(encode).filter(lambda e: e.get('input_ids'))
+#val_dataset = val_dataset.map(encode).filter(lambda e: e.get('input_ids'))
 
-train_dataset = train_dataset.map(encode).filter(lambda e: e.get('input_ids'))
-val_dataset = val_dataset.map(encode).filter(lambda e: e.get('input_ids'))
 
-
-dataset = MsDataset.load('AI-ModelScope/alpaca-gpt4-data-en', split='train')
+# dataset = MsDataset.load('AI-ModelScope/alpaca-gpt4-data-en', split='train')
+dataset = MsDataset.load('json', data_files=[cfg.local_dataset_path_train], split='train').to_hf_dataset()
 dataset = dataset.map(encode).filter(lambda e: e.get('input_ids'))
-dataset = dataset.train_test_split(test_size=0.001)
+dataset = dataset.train_test_split(test_size=cfg.dataset_split_ratio_test)
 
 train_dataset, val_dataset = dataset['train'], dataset['test']
 
