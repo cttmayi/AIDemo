@@ -11,12 +11,16 @@ from swift.llm import (
 )
 
 model_type = ModelType.qwen2_0_5b
+
 sft_args = SftArguments(
     model_type=model_type,
     dataset=[f'{DatasetName.blossom_math_zh}#2000'],
     output_dir='output')
+
 result = sft_main(sft_args)
+
 best_model_checkpoint = result['best_model_checkpoint']
+
 print(f'best_model_checkpoint: {best_model_checkpoint}')
 # torch.cuda.empty_cache()
 

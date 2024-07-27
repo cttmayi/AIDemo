@@ -5,6 +5,7 @@ model_dir_2 = "_model2/" + model_id
 # name = "qwen/Qwen-7B-Chat-Int4"
 
 from modelscope import AutoTokenizer, AutoModelForCausalLM, snapshot_download
+
 model_dir = snapshot_download(model_id, local_dir=model_dir)
 
 
