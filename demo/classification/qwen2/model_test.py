@@ -12,7 +12,8 @@ from tqdm import tqdm
 import cfg
 
 
-final_model_dir = 'output/checkpoint-2000' #cfg.local_model_final_path
+final_model_dir = 'output/checkpoint-2500'
+# final_model_dir = cfg.local_model_final_path
 original_model_dir = cfg.local_model_path
 dataset_path = cfg.local_dataset_test_path
 

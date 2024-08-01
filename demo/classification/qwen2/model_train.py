@@ -19,10 +19,10 @@ lora_config = LoraConfig(
 
 train_args = Seq2SeqTrainingArguments(
     # use_cpu=True,
-    output_dir='output',
+    output_dir=cfg.OUTPUT,
     learning_rate=1e-5,
-    num_train_epochs=5,
-    eval_steps=100,
+    num_train_epochs=4,
+    eval_steps=500,
     save_steps=500,
     evaluation_strategy='steps',
     save_strategy='steps',
@@ -30,7 +30,7 @@ train_args = Seq2SeqTrainingArguments(
     per_device_train_batch_size=1,
     per_device_eval_batch_size=1,
     gradient_accumulation_steps=16,
-    logging_steps=100,
+    logging_steps=500,
 )
 
 if __name__ == '__main__':
