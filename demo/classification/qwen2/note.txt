@@ -1,0 +1,101 @@
+/Users/ling/miniconda3/envs/fine/bin/python /Users/ling/workspace/MyProject/AIDemo/demo/classification/qwen2/model_test.py
+(fine) (base) ling@yuanlingdeMac-mini AIDemo % /Users/ling/miniconda3/envs/fine/bin/python /Users/ling/workspace/MyProject/AIDemo/demo/classification/qwen2/model_test.py
+2024-08-01 23:07:59,722 - modelscope - INFO - PyTorch version 2.2.2 Found.
+2024-08-01 23:07:59,722 - modelscope - INFO - Loading ast index from /Users/ling/.cache/modelscope/ast_indexer
+2024-08-01 23:07:59,750 - modelscope - INFO - Loading done! Current index file version is 1.15.0, with md5 06c98e3ea76f78cfc1edff5225c6755d and a total number of 980 components indexed
+/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/bitsandbytes/cextension.py:34: UserWarning: The installed version of bitsandbytes was compiled without GPU support. 8-bit optimizers, 8-bit multiplication, and GPU quantization are unavailable.
+  warn("The installed version of bitsandbytes was compiled without GPU support. "
+'NoneType' object has no attribute 'cadam32bit_grad_fp32'
+[INFO:swift] Successfully registered `/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/swift/llm/data/dataset_info.json`
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/datasets/load.py:2524: FutureWarning: 'ignore_verifications' was deprecated in favor of 'verification_mode' in version 2.9.1 and will be removed in 3.0.0.
+You can remove this warning by passing 'verification_mode=no_checks' instead.
+  warnings.warn(
+Generating train split: 206 examples [00:00, 22150.55 examples/s]
+Map: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 206/206 [00:00<00:00, 8098.48 examples/s]
+Filter: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 206/206 [00:00<00:00, 75625.96 examples/s]
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 206/206 [01:01<00:00,  3.37it/s]
+rouge-1: {'r': 0.9660194174757282, 'p': 0.9660194174757282, 'f': 0.9660194126456288}
+rouge-2: {'r': 0.0, 'p': 0.0, 'f': 0.0}
+rouge-l: {'r': 0.9660194174757282, 'p': 0.9660194174757282, 'f': 0.9660194126456288}
+Error messages:
+query: 附近最好吃的麻辣香锅，不开玩笑的; label: 1; output: 0
+query: 太麻了，青笋有点小，米饭给的也不多，土豆片都碎了，找不到了; label: 1; output: 0
+query: 一个小时送到的，很好吃，但是点了平菇怎么没给; label: 1; output: 0
+query: 锅仔酸菜炖腔骨怎么没见酸菜啊？只有青笋和腔骨，青笋也不是酸的。; label: 1; output: 0
+query: 小炒肉真心不是湖南小炒肉，坦白讲肉炒太老了，不推荐。鸭头不错; label: 1; output: 0
+query: 点的中辣，送来的次次都是微辣，服了，难道每次都会看错么？; label: 0; output: 1
+query: 就是时间稍微长些; label: 0; output: 1
+(fine) (base) ling@yuanlingdeMac-mini AIDemo % /Users/ling/miniconda3/envs/fine/bin/python /Users/ling/workspace/MyProject/AIDemo/demo/classification/qwen2/model_test.py
+2024-08-01 23:12:33,531 - modelscope - INFO - PyTorch version 2.2.2 Found.
+2024-08-01 23:12:33,531 - modelscope - INFO - Loading ast index from /Users/ling/.cache/modelscope/ast_indexer
+2024-08-01 23:12:33,559 - modelscope - INFO - Loading done! Current index file version is 1.15.0, with md5 06c98e3ea76f78cfc1edff5225c6755d and a total number of 980 components indexed
+/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/bitsandbytes/cextension.py:34: UserWarning: The installed version of bitsandbytes was compiled without GPU support. 8-bit optimizers, 8-bit multiplication, and GPU quantization are unavailable.
+  warn("The installed version of bitsandbytes was compiled without GPU support. "
+'NoneType' object has no attribute 'cadam32bit_grad_fp32'
+[INFO:swift] Successfully registered `/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/swift/llm/data/dataset_info.json`
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/datasets/load.py:2524: FutureWarning: 'ignore_verifications' was deprecated in favor of 'verification_mode' in version 2.9.1 and will be removed in 3.0.0.
+You can remove this warning by passing 'verification_mode=no_checks' instead.
+  warnings.warn(
+Generating train split: 206 examples [00:00, 21647.75 examples/s]
+Map: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 206/206 [00:00<00:00, 7969.99 examples/s]
+Filter: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 206/206 [00:00<00:00, 75818.41 examples/s]
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 206/206 [01:07<00:00,  3.07it/s]
+rouge-1: {'r': 0.9757281553398058, 'p': 0.9757281553398058, 'f': 0.9757281504611628}
+rouge-2: {'r': 0.0, 'p': 0.0, 'f': 0.0}
+rouge-l: {'r': 0.9757281553398058, 'p': 0.9757281553398058, 'f': 0.9757281504611628}
+Error messages:
+query: 附近最好吃的麻辣香锅，不开玩笑的; label: 1; output: 0
+query: 一个小时送到的，很好吃，但是点了平菇怎么没给; label: 1; output: 0
+query: 小炒肉真心不是湖南小炒肉，坦白讲肉炒太老了，不推荐。鸭头不错; label: 1; output: 0
+query: 点的中辣，送来的次次都是微辣，服了，难道每次都会看错么？; label: 0; output: 1
+query: 就是时间稍微长些; label: 0; output: 1
+(fine) (base) ling@yuanlingdeMac-mini AIDemo % /Users/ling/miniconda3/envs/fine/bin/python /Users/ling/workspace/MyProject/AIDemo/demo/classification/qwen2/model_test.py
+2024-08-01 23:16:18,420 - modelscope - INFO - PyTorch version 2.2.2 Found.
+2024-08-01 23:16:18,420 - modelscope - INFO - Loading ast index from /Users/ling/.cache/modelscope/ast_indexer
+2024-08-01 23:16:18,450 - modelscope - INFO - Loading done! Current index file version is 1.15.0, with md5 06c98e3ea76f78cfc1edff5225c6755d and a total number of 980 components indexed
+/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/bitsandbytes/cextension.py:34: UserWarning: The installed version of bitsandbytes was compiled without GPU support. 8-bit optimizers, 8-bit multiplication, and GPU quantization are unavailable.
+  warn("The installed version of bitsandbytes was compiled without GPU support. "
+'NoneType' object has no attribute 'cadam32bit_grad_fp32'
+[INFO:swift] Successfully registered `/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/swift/llm/data/dataset_info.json`
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/datasets/load.py:2524: FutureWarning: 'ignore_verifications' was deprecated in favor of 'verification_mode' in version 2.9.1 and will be removed in 3.0.0.
+You can remove this warning by passing 'verification_mode=no_checks' instead.
+  warnings.warn(
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 206/206 [01:05<00:00,  3.15it/s]
+rouge-1: {'r': 0.970873786407767, 'p': 0.970873786407767, 'f': 0.9708737815533959}
+rouge-2: {'r': 0.0, 'p': 0.0, 'f': 0.0}
+rouge-l: {'r': 0.970873786407767, 'p': 0.970873786407767, 'f': 0.9708737815533959}
+Error messages:
+query: 挺辣的，吃着还可以吧; label: 1; output: 0
+query: 快递大叔人特别好。就是百度外卖现在连个优惠都那个少，真要投奔饿了么了。。。。; label: 1; output: 0
+query: 感觉没有在店里的好吃，感谢送餐师傅我们家六楼没电梯还得爬楼梯; label: 1; output: 0
+query: 一个小时送到的，很好吃，但是点了平菇怎么没给; label: 1; output: 0
+query: 小炒肉真心不是湖南小炒肉，坦白讲肉炒太老了，不推荐。鸭头不错; label: 1; output: 0
+query: 就是时间稍微长些; label: 0; output: 1
+(fine) (base) ling@yuanlingdeMac-mini AIDemo % /Users/ling/miniconda3/envs/fine/bin/python /Users/ling/workspace/MyProject/AIDemo/demo/classification/qwen2/model_test.py
+2024-08-01 23:22:17,536 - modelscope - INFO - PyTorch version 2.2.2 Found.
+2024-08-01 23:22:17,536 - modelscope - INFO - Loading ast index from /Users/ling/.cache/modelscope/ast_indexer
+2024-08-01 23:22:17,565 - modelscope - INFO - Loading done! Current index file version is 1.15.0, with md5 06c98e3ea76f78cfc1edff5225c6755d and a total number of 980 components indexed
+/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/bitsandbytes/cextension.py:34: UserWarning: The installed version of bitsandbytes was compiled without GPU support. 8-bit optimizers, 8-bit multiplication, and GPU quantization are unavailable.
+  warn("The installed version of bitsandbytes was compiled without GPU support. "
+'NoneType' object has no attribute 'cadam32bit_grad_fp32'
+[INFO:swift] Successfully registered `/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/swift/llm/data/dataset_info.json`
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+/Users/ling/miniconda3/envs/fine/lib/python3.10/site-packages/datasets/load.py:2524: FutureWarning: 'ignore_verifications' was deprecated in favor of 'verification_mode' in version 2.9.1 and will be removed in 3.0.0.
+You can remove this warning by passing 'verification_mode=no_checks' instead.
+  warnings.warn(
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 206/206 [01:05<00:00,  3.12it/s]
+rouge-1: {'r': 0.9660194174757282, 'p': 0.9660194174757282, 'f': 0.9660194126456288}
+rouge-2: {'r': 0.0, 'p': 0.0, 'f': 0.0}
+rouge-l: {'r': 0.9660194174757282, 'p': 0.9660194174757282, 'f': 0.9660194126456288}
+Error messages:
+query: 挺辣的，吃着还可以吧; label: 1; output: 0
+query: 附近最好吃的麻辣香锅，不开玩笑的; label: 1; output: 0
+query: 感觉没有在店里的好吃，感谢送餐师傅我们家六楼没电梯还得爬楼梯; label: 1; output: 0
+query: 一个小时送到的，很好吃，但是点了平菇怎么没给; label: 1; output: 0
+query: 小炒肉真心不是湖南小炒肉，坦白讲肉炒太老了，不推荐。鸭头不错; label: 1; output: 0
+query: 点的中辣，送来的次次都是微辣，服了，难道每次都会看错么？; label: 0; output: 1
+query: 就是时间稍微长些; label: 0; output: 1
+(fine) (base) ling@yuanlingdeMac-mini AIDemo % 
