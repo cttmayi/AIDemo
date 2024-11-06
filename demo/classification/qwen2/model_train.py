@@ -57,9 +57,12 @@ if __name__ == '__main__':
         test_size = int(dataset.num_rows * dataset_split_ratio_test * 2)
     elif test_size > 1000:
         test_size = 1000
-    dataset = dataset.train_test_split(test_size=test_size, seed=0)
 
-    train_dataset, val_dataset = dataset['train'], dataset['test']
+    if test_size > 0:
+        dataset = dataset.train_test_split(test_size=test_size, seed=0)
+        train_dataset, val_dataset = dataset['train'], dataset['test']
+    else:
+        train_dataset, val_dataset = dataset, None
 
     trainer = Seq2SeqTrainer(
         model=model,

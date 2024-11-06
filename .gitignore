@@ -11,6 +11,8 @@
 /board/
 /output/
 /workspace/
+/temp/
+/models/
 
 /cache/
 /rag/graph/cache/
