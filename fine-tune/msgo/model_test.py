@@ -7,7 +7,8 @@ from swift.llm import get_template, TemplateType, to_device
 
 import cfg
 
-model_dir = 'output/checkpoint-1348'
+model_dir = 'output/checkpoint-72'
+model_dir = cfg.output_model_path
 
 # 拉起模型
 model = AutoModelForCausalLM.from_pretrained(cfg.local_model_path, # torch_dtype=torch.bfloat16,

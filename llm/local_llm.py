@@ -4,7 +4,7 @@ import os
 device = "cpu" # the device to load the model onto
 
 model_name = "Qwen/Qwen2-0.5B-Instruct"
-model_local_path = "model/Qwen2-0.5B-Instruct"
+model_local_path = "models/Qwen2-0.5B-Instruct"
 
 
 if os.path.exists(model_local_path):
@@ -31,6 +31,10 @@ text = tokenizer.apply_chat_template(
     tokenize=False,
     add_generation_prompt=True
 )
+print('text=====')
+print(text)
+print('=========')
+
 
 model_inputs = tokenizer([text], return_tensors="pt").to(device)
 
@@ -44,4 +48,5 @@ generated_ids = [
 
 response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
+print('response=====')
 print(response)
