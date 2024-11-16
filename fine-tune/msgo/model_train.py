@@ -24,6 +24,9 @@ peft_config = PromptEncoderConfig(
 
 model = Swift.prepare_model(model, peft_config)
 
+model.print_trainable_parameters()
+
+
 tokenizer = AutoTokenizer.from_pretrained(model_type, trust_remote_code=True)
 
 
@@ -58,7 +61,7 @@ if __name__ == '__main__':
 
     train_args = Seq2SeqTrainingArguments(
         output_dir='output',
-        learning_rate=1e-4,
+        learning_rate=1e-5,
         num_train_epochs=3,
         eval_steps=500,
         save_steps=500,

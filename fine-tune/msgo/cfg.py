@@ -1,10 +1,11 @@
 import os
-
+from swift.llm import TemplateType
 
 PROJECT = 'msgo'
 
 model_name = 'qwen/Qwen2-0.5B'
 dataset_name = 'wowhaha/moral-foundation-news_2000'# 'AI-ModelScope/alpaca-gpt4-data-en' # "afqmc"
+template_type = TemplateType.default
 
 CURR_PATH = os.path.dirname(os.path.abspath(__file__))
 
