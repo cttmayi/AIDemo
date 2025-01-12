@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # Create model
     models = model.create_model(10, 10, 1000, 10, 'AE.pt') 
 
-    optimizer = torch.optim.AdamW(models.parameters(), lr=1e-5)
+    optimizer = torch.optim.AdamW(models.parameters(), lr=1e-3)
     criterion = torch.nn.MSELoss()
 
     # Train

@@ -19,7 +19,7 @@ class RegDataset(Dataset):
 
         self.regs = []
         self.labels = []
-        len_data = len(self._data(0))
+        self.len_data = len(self._data(0))
 
         if data_path == 'train':
             for i in range(train_data_size):

@@ -10,7 +10,7 @@ class Encoder(torch.nn.Module):
     def __init__(self, input_size, hidden_size, latent_size):
         super(Encoder, self).__init__()
         self.linear1 = nn.Linear(input_size, hidden_size)
-        # self.dropout = nn.Dropout(0.05)
+        # self.dropout = nn.Dropout(0.01)
         self.linear2 = nn.Linear(hidden_size, latent_size)
 
     def forward(self, x):# x: bs,input_size
