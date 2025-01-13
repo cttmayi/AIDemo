@@ -10,8 +10,28 @@ import random
 from torch.utils.data import Dataset, IterableDataset, DataLoader
 
 train_data_size = 1000
-test_data_size = 10
+test_data_size = 21
 
+
+def _d_R(index):
+    index = index % 3
+    R = [ 
+        [ 480,  720,  480 + 20, 10],
+        [ 720, 1280,  720 + 35, 15],
+        [1080, 1920, 1080 + 45, 20],
+    ]
+    return R[index]
+
+def _d_M(index):
+    index = index % 2
+    M = [ 
+        [ 1,  3,  5,  2,  0],
+        [ 0,  3,  3,  4,  1],
+    ]
+    return M[index]
+
+def _d_F(index):
+    return [4, 7, 10, 2, 1]
 
 
 class RegDataset(Dataset):
@@ -33,6 +53,8 @@ class RegDataset(Dataset):
                     self.regs.append(self._data(index))
                     self.labels.append(-1)
                 else:
+                    self.regs.append(self._data(index))
+                    self.labels.append(-1)
                     self.regs.append(self._data_err(index, err_i))
                     self.labels.append(err_i)
 
@@ -47,32 +69,20 @@ class RegDataset(Dataset):
             i * 2,
             i + g,
             i + 1, 
-            int(i/2),
-            i + 2, 
-            7, 
-            i + 3, 
+            i // 2,
             random.randint(0, 5)
         ]
+        R = _d_R(index)
+        M  = _d_M(index)
+        F  = _d_F(index)
+        data.extend(R)
+        data.extend(M)
+        data.extend(F)
         return data
 
     def _data_err(self, index, err_index):
-
-        err_range = [
-            [1, 3], # 0
-            [1, 3], # 1
-            [1, 3], # 2
-            [1, 3], # 3
-            [1, 3], # 4
-            [1, 3], # 5
-            [1, 3], # 6
-            [1, 3], # 7
-            [1, 3], # 8
-            [10, 20], # 9
-        ]
-
         data = self._data(index)
-        
-        data[err_index] = data[err_index] + random.randint(err_range[err_index][0], err_range[err_index][1])
+        data[err_index] = data[err_index] + random.randint(1, 3)
         return data
 
     def __getitem__(self, index):
