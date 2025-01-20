@@ -43,6 +43,9 @@ class AE(torch.nn.Module):
         re_x = self.decoder(feat) #re_x: bs, output_size
         return re_x
     
+    def encode(self, x):
+        return self.encoder(x)
+    
 
 def create_model(input_size, output_size, latent_size, hidden_size, model_name=None):
     model = AE(input_size, output_size, latent_size, hidden_size)

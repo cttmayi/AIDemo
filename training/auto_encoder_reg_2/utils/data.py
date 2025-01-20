@@ -53,7 +53,7 @@ def generate_data(index, error_index=None):
     data.extend(modulation_vector_6x5)
     data.extend(frequency_vector)
 
-    data = [value * 100 for value in data]
+    # data = [value * 100 for value in data]
 
     if error_index is not None:
         error_index = error_index % len(data)

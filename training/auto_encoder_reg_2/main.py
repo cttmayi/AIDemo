@@ -22,7 +22,7 @@ model_path = 'AE.pt'
 
 
 def model_save_callback(models, loss):
-    if loss < 1:
+    if loss < 0.1:
         save_model(models, model_path)
 
 

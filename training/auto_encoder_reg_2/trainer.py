@@ -35,13 +35,17 @@ class Trainer:
             if best_loss > running_loss:
                 best_loss = running_loss
                 best_stop_count = 0
-                rate = self.evelate(0.4, True)
-                print('B[%4d/%d] loss: %.6f rate: %.2f%%' %(epoch + 1, epochs, running_loss, rate*100))
-                if self.save_model_callback is not None:
-                    self.save_model_callback(self.model, running_loss)
 
-                if rate < 0.001 and running_loss < 0.001:
-                    break
+                if running_loss < 0.001:
+                    rate = self.evelate(1.0, False)
+                    print('B[%4d/%d] loss: %.6f rate: %.2f%%' %(epoch + 1, epochs, running_loss, rate*100))
+                    if self.save_model_callback is not None:
+                        self.save_model_callback(self.model, running_loss)
+
+                    if rate < 0.001 and running_loss < 0.001:
+                        break
+                else:
+                    print('B[%4d/%d] loss: %.6f' %(epoch + 1, epochs, running_loss))
                 
             else:
                 best_stop_count += 1
@@ -73,15 +77,19 @@ class Trainer:
             if o_err_index == -1:
                 if _print: print('C ', inputs_long[0].cpu().tolist())
             else:
-                if _print: print('W ', inputs_long[0].cpu().numpy(), '__', io_compare_long[0].cpu().tolist())
+                if _print: print('W ', inputs_long[0].cpu().numpy())
+                if _print: print('__', io_compare_long[0].cpu().tolist())
                 ret = False
         else:
             if o_err_index in i_err_indexs:
-                if _print: print('C ', inputs_long[0].cpu().tolist(), i_err_indexs, '__', io_compare_long[0].cpu().tolist())
+                if _print: print('C ', inputs_long[0].cpu().tolist(), i_err_indexs)
+                if _print: print('__', io_compare_long[0].cpu().tolist())
             elif io_compare[0][i_err_indexs[0]].item() > 0.5:
-                if _print: print('C_', inputs_long[0].cpu().tolist(), i_err_indexs, '__', io_compare[0].cpu().numpy())
+                if _print: print('C_', inputs_long[0].cpu().tolist(), i_err_indexs)
+                if _print: print('__', io_compare[0].cpu().numpy())
             else:
-                if _print: print('W ', inputs_long[0].cpu().tolist(), i_err_indexs, '__', io_compare[0].cpu().numpy(), o_err_index)
+                if _print: print('W ', inputs_long[0].cpu().tolist(), i_err_indexs)
+                if _print: print('__', io_compare[0].cpu().numpy(), o_err_index)
                 ret = False
         return ret
 
