@@ -10,12 +10,12 @@ class Encoder(torch.nn.Module):
     def __init__(self, input_size, hidden_size, latent_size):
         super(Encoder, self).__init__()
         self.linear1 = nn.Linear(input_size, hidden_size)
-        # self.dropout = nn.Dropout(0.01)
+        self.dropout = nn.Dropout(0.1)
         self.linear2 = nn.Linear(hidden_size, latent_size)
 
     def forward(self, x):# x: bs,input_size
         x = F.relu(self.linear1(x)) #-> bs,hidden_size
-        # x = self.dropout(x)
+        x = self.dropout(x)
         x = self.linear2(x) #-> bs,latent_size
         return x
 
@@ -23,12 +23,13 @@ class Decoder(torch.nn.Module):
     def __init__(self, latent_size, hidden_size, output_size):
         super(Decoder, self).__init__()
         self.linear1 = torch.nn.Linear(latent_size, hidden_size)
-        self.linear2 = torch.nn.Linear(hidden_size, output_size)        
+        self.linear2 = torch.nn.Linear(hidden_size, output_size)   
 
     def forward(self, x): # x:bs,latent_size
         x = F.relu(self.linear1(x)) #->bs,hidden_size
         # x = torch.sigmoid(self.linear2(x)) #->bs,output_size
         x = self.linear2(x) #->bs,output_size
+        x = F.sigmoid(x)
         return x
 
 class AE(torch.nn.Module):

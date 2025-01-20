@@ -7,92 +7,103 @@ import os
 import random
 
 
+
 from torch.utils.data import Dataset, IterableDataset, DataLoader
 
 train_data_size = 1000
 test_data_size = 21
 
 
-def _d_R(index):
-    index = index % 3
-    R = [ 
-        [ 480,  720,  480 + 20, 10],
-        [ 720, 1280,  720 + 35, 15],
-        [1080, 1920, 1080 + 45, 20],
+# To make the variable and function names more descriptive and meaningful, I've rewritten the code with improved naming conventions. The changes include making the names more specific to their purpose and adhering to Python's naming conventions (snake_case for variables and functions).
+
+def get_modulation_matrix_5x5(index):
+    index = index % 5
+    modulation_matrix_5x5 = [ 
+        [1, 3, 5, 2, 0],
+        [0, 3, 3, 4, 1],
+        [5, 2, 3, 4, 1],
+        [1, 2, 3, 4, 1],
+        [0, 3, 3, 4, 1],
     ]
-    return R[index]
+    return modulation_matrix_5x5[index]
 
-def _d_M(index):
-    index = index % 2
-    M = [ 
-        [ 1,  3,  5,  2,  0],
-        [ 0,  3,  3,  4,  1],
+def get_modulation_matrix_6x5(index):
+    index = index % 6
+    modulation_matrix_6x5 = [ 
+        [1, 3, 5, 2, 0],
+        [0, 3, 3, 4, 1],
+        [2, 2, 3, 4, 1],
+        [1, 2, 3, 4, 1],
+        [0, 3, 3, 4, 1],
+        [2, 2, 3, 4, 1],
     ]
-    return M[index]
+    return modulation_matrix_6x5[index]
 
-def _d_F(index):
-    return [4, 7, 10, 2, 1]
+def get_frequency_vector(index):
+    return [4, 7, 1, 2, 1]
 
+def generate_data(index, error_index=None):
+    data = []
+    
+    modulation_vector_5x5 = get_modulation_matrix_5x5(index)
+    modulation_vector_6x5 = get_modulation_matrix_6x5(index)
+    frequency_vector = get_frequency_vector(index)
+    
+    data.extend(modulation_vector_5x5)
+    data.extend(modulation_vector_6x5)
+    data.extend(frequency_vector)
+
+    data = [value * 100 for value in data]
+
+    if error_index is not None:
+        error_index = error_index % len(data)
+        data[error_index] = data[error_index] + random.randint(1, 3)
+    data = number_to_binary_lists(data, length=12)
+
+    return data
+
+def number_to_binary_list(n, length=4):
+    binary_str = bin(n)[2:]
+    binary_str = binary_str.zfill(length)
+    binary_list = [int(bit) for bit in binary_str]
+    return binary_list
+
+def number_to_binary_lists(numbers, length=4):
+    binary_lists = [number_to_binary_list(n, length) for n in numbers]
+    return [item for sublist in binary_lists for item in sublist]
+
+
+data_len = len(generate_data(0))
 
 class RegDataset(Dataset):
-    def __init__(self, data_path):
+    def __init__(self, data_path, encoding='label'):
 
-        self.regs = []
+        self.data = []
+        self.data_err = []
         self.labels = []
-        self.len_data = len(self._data(0))
+        self.encoding = encoding
 
         if data_path == 'train':
             for i in range(train_data_size):
-                self.regs.append(self._data(i))
-                self.labels.append(-1)
+                self.data.append(generate_data(i))
+                self.data_err.append(generate_data(i, i))
         elif data_path == 'test':
             for i in range(test_data_size):
                 err_i = i # random.randint(0, len_data - 1)
                 index = random.randint(0, train_data_size - 1)
-                if i < 2 or err_i < 2 :
-                    self.regs.append(self._data(index))
-                    self.labels.append(-1)
-                else:
-                    self.regs.append(self._data(index))
-                    self.labels.append(-1)
-                    self.regs.append(self._data_err(index, err_i))
-                    self.labels.append(err_i)
 
-        pass
+                self.data.append(generate_data(index))
+                self.data_err.append(generate_data(index, err_i))
 
-    def _data(self, index):
-        i = index % 100
-        g = int(index / 100)
-        data = [
-            i, 
-            g,
-            i * 2,
-            i + g,
-            i + 1, 
-            i // 2,
-            random.randint(0, 5)
-        ]
-        R = _d_R(index)
-        M  = _d_M(index)
-        F  = _d_F(index)
-        data.extend(R)
-        data.extend(M)
-        data.extend(F)
-        return data
-
-    def _data_err(self, index, err_index):
-        data = self._data(index)
-        data[err_index] = data[err_index] + random.randint(1, 3)
-        return data
 
     def __getitem__(self, index):
-        reg = torch.tensor(self.regs[index], dtype=torch.float32)
-        label = torch.tensor(self.labels[index], dtype=torch.long)
-        return reg, label
+        data = torch.tensor(self.data[index], dtype=torch.float32)
+        data_err = torch.tensor(self.data_err[index], dtype=torch.float32)
+        return data, data_err
 
     def __len__(self):
         # 返回数据集的大小
-        return len(self.regs)
+        return len(self.data)
 
 
 def create_dataset(data_path, batch_size):
@@ -115,7 +126,7 @@ def create_dataset(data_path, batch_size):
 
 
 if __name__ == '__main__':
-    device = 'mps'
+    # device = 'mps'
 
     train_loader, test_loader = create_dataset('', 2)
 
