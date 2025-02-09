@@ -2,20 +2,20 @@ import os, sys
 from tqdm import tqdm
 import json
 from model import ModelBase, ModelOpenAI
-from task import TaskBase, TaskMath, TaskQA, TaskLoader
+from task import TaskBase, TaskMath, TaskQA, TaskLoader, TaskMMLU
 
 def init():
     models = [
         # ['GPT3.5' ,ModelOpenAI, [os.getenv('F2GPT_API_KEY'), os.getenv('F2GPT_API_BASE'), 'gpt-3.5-turbo']],
-        ['DEEPSEEK R1 QWEN 1.5B' , ModelOpenAI, [os.getenv('SILICONFLOW_API_KEY'), os.getenv('SILICONFLOW_API_BASE'), 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B']],
-        # ['DEEPSEEK R1 QWEN 7B'   , ModelOpenAI, [os.getenv('SILICONFLOW_API_KEY'), os.getenv('SILICONFLOW_API_BASE'), 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B']],
+        # ['DEEPSEEK R1 QWEN 1.5B' , ModelOpenAI, [os.getenv('SILICONFLOW_API_KEY'), os.getenv('SILICONFLOW_API_BASE'), 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B']],
+        ['DEEPSEEK R1 LLAMA 8B'   , ModelOpenAI, [os.getenv('SILICONFLOW_API_KEY'), os.getenv('SILICONFLOW_API_BASE'), 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B']],
     ]
 
     tasks = [
-        # ['TaskTruthfulQA', task_base.TaskTruthfulQA,[]],
+        # ['MMLU', TaskMMLU, [['accuracy', 'bleu']]]
         ['TruthfulQA', TaskLoader,['truthful_qa', 'generation', 'validation', 'question', 'best_answer', ['accuracy', 'bleu']]],
-        ['Math', TaskMath, []],
-        ['Q&A', TaskQA, []],
+        # ['Math', TaskMath, []],
+        # ['Q&A', TaskQA, []],
     ]
     return models, tasks
 
@@ -25,23 +25,26 @@ def save_report(path: str, results):
     with open(path, "w") as f:
         json.dump(results, f, indent=4, ensure_ascii=False)
 
-def evaluate_once(name, model: ModelBase, task: TaskBase, max_samples=100):
+def evaluate_once(name, model: ModelBase, task: TaskBase, max_samples=10):
     batch_size = 1
     loader = task.get_loader(batch_size)
 
     input_all, output_all, target_all = [], [], []
 
-    for batch in tqdm(loader, desc=name):
-        inputs = task.get_inputs(batch)
-        outputs = model.generate(inputs)
-        targets = task.get_targets(batch)
+    with tqdm(total=max_samples//batch_size, desc=name) as pbar:
+        for idx, batch in enumerate(loader):
+            inputs = task.get_inputs(batch)
+            outputs = model.generate(inputs)
+            outputs = task.to_outputs(outputs)
+            targets = task.get_targets(batch)
 
-        input_all.extend(inputs)
-        output_all.extend(outputs)
-        target_all.extend(targets)
+            input_all.extend(inputs)
+            output_all.extend(outputs)
+            target_all.extend(targets)
 
-        if len(input_all) > max_samples:
-            break
+            pbar.update(1)
+            if idx >= max_samples:
+                break
 
     metrics = task.evaluate(output_all, target_all)
 

@@ -67,7 +67,7 @@ class Evaluator:
 
         results = {}
         for metric in metrics:
-            if metric == "accuracy":
+            if metric == 'acc' or metric == "accuracy" or metric == "em" or metric == "exact_match":
                 results[metric] = np.mean([p == r for p, r in zip(predictions, references)])
             elif metric == "bleu":
                 results[metric] = self._calculate_bleu(predictions, references)

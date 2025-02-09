@@ -20,6 +20,9 @@ class TaskBase:
     def get_targets(self, batch):
         return batch[self.data_targets]
 
+    def to_outputs(self, outputs):
+        return outputs
+
     def _collate_fn(self, batch):
         ret = {}
         for idx, item in enumerate(batch):
@@ -44,13 +47,11 @@ class TaskBase:
 
 class TaskLoader(TaskBase):
     def __init__(self, dataset_path, dataset_name, dataset_split, data_inputs, data_targets, metrics):
-        self.dataset_path = dataset_path
-        self.dataset_name = dataset_name
-        self.dataset_split = dataset_split
-        print(self.dataset_path, self.dataset_name, self.dataset_split)
-        datasets = load_dataset(self.dataset_path, self.dataset_name)
-        print(datasets)
-        dataset = datasets[self.dataset_split]
+        # self.dataset_path = dataset_path
+        # self.dataset_name = dataset_name
+        # self.dataset_split = dataset_split
+        datasets = load_dataset(dataset_path, dataset_name)
+        dataset = datasets[dataset_split]
         super().__init__(dataset, data_inputs, data_targets, metrics)
 
 
