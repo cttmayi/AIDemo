@@ -96,6 +96,7 @@ if __name__ == "__main__":
 
     trainer = GRPOTrainer(
         model=model,
+        processing_class=tokenizer,
         reward_funcs = [
             reward_len,
         ],
@@ -106,6 +107,6 @@ if __name__ == "__main__":
     trainer.save_model()
 
     #测试结果
-    response = model_generate(model, tokenizer, prompt)
-    print(response)
+    # response = model_generate(model, tokenizer, prompt)
+    # print(response)
 
