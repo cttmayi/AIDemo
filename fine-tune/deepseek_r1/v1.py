@@ -1,7 +1,7 @@
 # train_grpo.py
 from datasets import load_dataset
 from trl import GRPOConfig, GRPOTrainer
-import os
+import os, sys
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -14,14 +14,22 @@ dataset_split = "train"
 data_inputs = "prompt"
 data_targets = "completion"
 
-model_name = "Qwen/Qwen2-0.5B-Instruct"
+model_name = "Qwen/Qwen2.5-1.5B-Instruct"
 
 device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 
 
+system_prompt = ''' conversation between User and Assistant. The user asks a question, and the Assistant solves it.
+The assistant first thinks about the reasoning process in the mind and then provides the user
+with the answer. The reasoning process and answer are enclosed within <think> </think> and
+<answer> </answer> tags, respectively, i.e., <think> reasoning process here </think>
+<answer> answer here </answer>. 
+'''
+
+
 def apply_chat_template(tokenizer, prompt):
     messages = [
-        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "system", "content": system_prompt},
         {"role": "user", "content": prompt}
     ]
     text = tokenizer.apply_chat_template(
@@ -33,7 +41,7 @@ def apply_chat_template(tokenizer, prompt):
     model_inputs = tokenizer([text], return_tensors='pt').to(device)
     return model_inputs
 
-def model_generate(model, tokenizer, prompt, max_new_tokens=32):
+def model_generate(model, tokenizer, prompt, max_new_tokens=128):
     model_inputs = apply_chat_template(tokenizer, prompt)
     generated_ids = model.generate(input_ids=model_inputs.input_ids, max_new_tokens=max_new_tokens)
     generated_ids = [
@@ -55,9 +63,11 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     # 测试模型生成
-    # prompt = "中国的首都是哪里？"
-    # response = model_generate(model, tokenizer, prompt)
-    # print(response)
+    prompt = "小明的爸爸有三个儿子， 大儿子叫大毛，二儿子叫二毛，那么三儿子叫什么？"
+    response = model_generate(model, tokenizer, prompt)
+    print(response)
+
+    sys.exit(0)
 
     if not os.path.exists(dataset_local_path):
         dataset = load_dataset(dataset_remote_path, split=dataset_split)
