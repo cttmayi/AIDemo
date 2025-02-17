@@ -7,7 +7,8 @@ from trl import GRPOConfig, GRPOTrainer
 from vllm import SamplingParams
 
 
-model_name = "meta-llama/meta-Llama-3.1-8B-Instruct"
+# model_name = "meta-llama/meta-Llama-3.1-8B-Instruct"
+model_name = "Qwen/Qwen2.5-0.5B-Instruct"
 max_seq_length = 512 # Can increase for longer reasoning traces
 lora_rank = 32 # Larger rank = smarter, but slower
 
