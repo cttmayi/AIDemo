@@ -1,17 +1,10 @@
-
-
-
-
-
 from unsloth import FastLanguageModel, PatchFastRL
-PatchFastRL("GRPO", FastLanguageModel)
-
 from unsloth import is_bfloat16_supported
 import torch
-
 import re
 from datasets import load_dataset, Dataset
 from trl import GRPOConfig, GRPOTrainer
+
 
 
 model_name = "meta-llama/meta-Llama-3.1-8B-Instruct"
@@ -38,6 +31,7 @@ XML_COT_FORMAT = """\
 </answer>
 """
 
+PatchFastRL("GRPO", FastLanguageModel)
 
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = model_name,
