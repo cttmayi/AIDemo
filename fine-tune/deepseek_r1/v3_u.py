@@ -1,4 +1,6 @@
 from unsloth import FastLanguageModel, PatchFastRL
+PatchFastRL("GRPO", FastLanguageModel)
+
 from unsloth import is_bfloat16_supported
 import torch
 import re
@@ -32,7 +34,7 @@ XML_COT_FORMAT = """\
 </answer>
 """
 
-PatchFastRL("GRPO", FastLanguageModel)
+
 
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = model_name,
