@@ -4,7 +4,7 @@ import torch
 import re
 from datasets import load_dataset, Dataset
 from trl import GRPOConfig, GRPOTrainer
-
+from vllm import SamplingParams
 
 
 model_name = "meta-llama/meta-Llama-3.1-8B-Instruct"
@@ -164,3 +164,78 @@ trainer = GRPOTrainer(
     train_dataset = dataset,
 )
 trainer.train()
+trainer.save_model(output_dir="outputs")
+
+text = tokenizer.apply_chat_template([
+    {"role" : "user", "content" : "Calculate pi."},
+], tokenize = False, add_generation_prompt = True)
+
+
+sampling_params = SamplingParams(
+    temperature = 0.8,
+    top_p = 0.95,
+    max_tokens = 1024,
+)
+output = model.fast_generate(
+    [text],
+    sampling_params = sampling_params,
+    lora_request = None,
+)[0].outputs[0].text
+
+print('output', output)
+
+
+text = tokenizer.apply_chat_template([
+    {"role" : "system", "content" : SYSTEM_PROMPT},
+    {"role" : "user", "content" : "Calculate pi."},
+], tokenize = False, add_generation_prompt = True)
+
+from vllm import SamplingParams
+sampling_params = SamplingParams(
+    temperature = 0.8,
+    top_p = 0.95,
+    max_tokens = 1024,
+)
+output = model.fast_generate(
+    text,
+    sampling_params = sampling_params,
+    lora_request = model.load_lora("grpo_saved_lora"),
+)[0].outputs[0].text
+
+print('output', output)
+
+
+# Merge to 16bit
+if False: model.save_pretrained_merged("model", tokenizer, save_method = "merged_16bit",)
+if False: model.push_to_hub_merged("hf/model", tokenizer, save_method = "merged_16bit", token = "")
+
+# Merge to 4bit
+if False: model.save_pretrained_merged("model", tokenizer, save_method = "merged_4bit",)
+if False: model.push_to_hub_merged("hf/model", tokenizer, save_method = "merged_4bit", token = "")
+
+# Just LoRA adapters
+if False: model.save_pretrained_merged("model", tokenizer, save_method = "lora",)
+if False: model.push_to_hub_merged("hf/model", tokenizer, save_method = "lora", token = "")
+
+# Save to 8bit Q8_0
+if False: model.save_pretrained_gguf("model", tokenizer,)
+# Remember to go to https://huggingface.co/settings/tokens for a token!
+# And change hf to your username!
+if False: model.push_to_hub_gguf("hf/model", tokenizer, token = "")
+
+# Save to 16bit GGUF
+if False: model.save_pretrained_gguf("model", tokenizer, quantization_method = "f16")
+if False: model.push_to_hub_gguf("hf/model", tokenizer, quantization_method = "f16", token = "")
+
+# Save to q4_k_m GGUF
+if False: model.save_pretrained_gguf("model", tokenizer, quantization_method = "q4_k_m")
+if False: model.push_to_hub_gguf("hf/model", tokenizer, quantization_method = "q4_k_m", token = "")
+
+# Save to multiple GGUF options - much faster if you want multiple!
+if False:
+    model.push_to_hub_gguf(
+        "hf/model", # Change hf to your username!
+        tokenizer,
+        quantization_method = ["q4_k_m", "q8_0", "q5_k_m",],
+        token = "",
+    )
