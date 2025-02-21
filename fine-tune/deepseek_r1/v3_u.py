@@ -6,8 +6,13 @@ import torch
 import re
 from datasets import load_dataset, Dataset
 from trl import GRPOConfig, GRPOTrainer
-from vllm import SamplingParams
+import os
+from huggingface_hub import HfFileSystem
 
+
+print(os.environ["HF_ENDPOINT"])
+
+HfFileSystem
 
 # model_name = "meta-llama/meta-Llama-3.1-8B-Instruct"
 model_name = "Qwen/Qwen2.5-0.5B-Instruct"
@@ -169,43 +174,47 @@ trainer = GRPOTrainer(
 trainer.train()
 trainer.save_model(output_dir="outputs")
 
-text = tokenizer.apply_chat_template([
-    {"role" : "user", "content" : "Calculate pi."},
-], tokenize = False, add_generation_prompt = True)
+
+if False:
+    from vllm import SamplingParams
+
+    text = tokenizer.apply_chat_template([
+        {"role" : "user", "content" : "Calculate pi."},
+    ], tokenize = False, add_generation_prompt = True)
 
 
-sampling_params = SamplingParams(
-    temperature = 0.8,
-    top_p = 0.95,
-    max_tokens = 1024,
-)
-output = model.fast_generate(
-    [text],
-    sampling_params = sampling_params,
-    lora_request = None,
-)[0].outputs[0].text
+    sampling_params = SamplingParams(
+        temperature = 0.8,
+        top_p = 0.95,
+        max_tokens = 1024,
+    )
+    output = model.fast_generate(
+        [text],
+        sampling_params = sampling_params,
+        lora_request = None,
+    )[0].outputs[0].text
 
-print('output', output)
+    print('output', output)
 
 
-text = tokenizer.apply_chat_template([
-    {"role" : "system", "content" : SYSTEM_PROMPT},
-    {"role" : "user", "content" : "Calculate pi."},
-], tokenize = False, add_generation_prompt = True)
+    text = tokenizer.apply_chat_template([
+        {"role" : "system", "content" : SYSTEM_PROMPT},
+        {"role" : "user", "content" : "Calculate pi."},
+    ], tokenize = False, add_generation_prompt = True)
 
-from vllm import SamplingParams
-sampling_params = SamplingParams(
-    temperature = 0.8,
-    top_p = 0.95,
-    max_tokens = 1024,
-)
-output = model.fast_generate(
-    text,
-    sampling_params = sampling_params,
-    lora_request = model.load_lora("grpo_saved_lora"),
-)[0].outputs[0].text
 
-print('output', output)
+    sampling_params = SamplingParams(
+        temperature = 0.8,
+        top_p = 0.95,
+        max_tokens = 1024,
+    )
+    output = model.fast_generate(
+        text,
+        sampling_params = sampling_params,
+        lora_request = model.load_lora("grpo_saved_lora"),
+    )[0].outputs[0].text
+
+    print('output', output)
 
 
 # Merge to 16bit
@@ -241,4 +250,4 @@ if False:
         tokenizer,
         quantization_method = ["q4_k_m", "q8_0", "q5_k_m",],
         token = "",
-    )
+        )
