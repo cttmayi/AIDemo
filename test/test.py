@@ -1,9 +1,17 @@
-import torch
+import re, os
 
 
-a = torch.Tensor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-b = torch.Tensor([1, 2, 4, 4, 5, 6, 7, 8, 9, 9])
+checkpoint = "/outputs/QS/checkpoint-40"
 
-print(torch.eq(a, b).all().item())
-print(torch.where(a != b)[0].tolist())
-print((a != b).all().item())
+PREFIX_CHECKPOINT_DIR = "checkpoint"
+_re_checkpoint = re.compile(r"^" + PREFIX_CHECKPOINT_DIR + r"\-(\d+)$")
+
+def get_checkpoint_number(path):
+    path = os.path.basename(path)
+    if _re_checkpoint.search(path) is not None:
+        return int(_re_checkpoint.search(path).groups()[0])
+    return 0
+
+
+max_steps = get_checkpoint_number(checkpoint)
+print(max_steps) # 1000

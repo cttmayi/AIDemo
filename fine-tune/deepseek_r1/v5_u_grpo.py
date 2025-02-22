@@ -21,7 +21,7 @@ save_steps = 50
 checkpoint = None
 if os.path.exists(output_dir):
     checkpoint = get_last_checkpoint(output_dir)
-print(f"Checkpoint: {checkpoint}")
+print(f"===== Checkpoint: {checkpoint}")
 
 
 PREFIX_CHECKPOINT_DIR = "checkpoint"
@@ -35,7 +35,7 @@ def get_checkpoint_number(path):
 
 
 max_steps = get_checkpoint_number(checkpoint) + max_steps
-print(f"Max steps: {max_steps}")
+print(f"===== Max steps: {max_steps}")
 
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = local_model_name,
