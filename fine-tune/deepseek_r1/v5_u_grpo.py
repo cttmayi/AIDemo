@@ -13,11 +13,15 @@ local_model_name = local_dir + "/models/Qwen2.5-3B" # "Qwen/Qwen2.5-3B-Instruct"
 local_data_name = local_dir + "/datasets/gsm8k" # "openai/gsm8k"
 max_seq_length = 1024 # Can increase for longer reasoning traces
 lora_rank = 64 # Larger rank = smarter, but slower
-output_dir = "outputs" 
+output_dir = local_dir + "/outputs/Qwen2.5-3B-GRPO"
+num_train_epochs = 0.01
+save_steps = 50
 
 checkpoint = None
 if os.path.exists(output_dir):
     checkpoint = get_last_checkpoint(output_dir)
+print(f"Checkpoint: {checkpoint}")
+
 
 
 model, tokenizer = FastLanguageModel.from_pretrained(
@@ -158,8 +162,9 @@ if __name__ == "__main__":
         max_prompt_length = 256,
         max_completion_length = 200,
         # num_train_epochs = 1, # Set to 1 for a full training run
-        max_steps = 250,
-        save_steps = 250,
+        num_train_epochs = num_train_epochs,
+        # max_steps = 250,
+        save_steps = save_steps,
         max_grad_norm = 0.1,
         report_to = "none", # Can use Weights & Biases
         output_dir = output_dir,
