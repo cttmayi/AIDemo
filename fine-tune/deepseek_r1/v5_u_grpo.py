@@ -9,7 +9,7 @@ from trl import GRPOConfig, GRPOTrainer
 
 local_dir = '/hy-tmp'
 
-local_model_name = local_dir + "/models/Qwen2.5-3B-Instruct" # "Qwen/Qwen2.5-3B-Instruct",
+local_model_name = local_dir + "/models/Qwen2.5-3B" # "Qwen/Qwen2.5-3B-Instruct",
 local_data_name = local_dir + "/datasets/gsm8k" # "openai/gsm8k"
 max_seq_length = 1024 # Can increase for longer reasoning traces
 lora_rank = 64 # Larger rank = smarter, but slower

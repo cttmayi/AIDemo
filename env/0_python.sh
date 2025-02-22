@@ -24,4 +24,7 @@ pip install --no-deps trl peft accelerate bitsandbytes vllm
 
 pip install vllm
 
+pip install --upgrade pillow
+
+pip instlal nvitop
 
