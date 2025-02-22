@@ -18,6 +18,6 @@ fi
 export HF_ENDPOINT=https://hf-mirror.com
 
 # 配置临时目录
-export LOCAL_DIR=/hy-tmp
+export LOCAL_DIR=~/cache
 
 
