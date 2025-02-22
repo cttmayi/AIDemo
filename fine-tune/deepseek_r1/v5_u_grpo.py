@@ -2,7 +2,7 @@ from unsloth import FastLanguageModel, PatchFastRL
 PatchFastRL("GRPO", FastLanguageModel)
 from unsloth import is_bfloat16_supported
 import torch
-import re
+import re, os
 from datasets import load_dataset, Dataset
 from transformers.trainer_utils import get_last_checkpoint
 from trl import GRPOConfig, GRPOTrainer
@@ -15,7 +15,9 @@ max_seq_length = 1024 # Can increase for longer reasoning traces
 lora_rank = 64 # Larger rank = smarter, but slower
 output_dir = "outputs" 
 
-checkpoint = get_last_checkpoint(output_dir)
+checkpoint = None
+if os.path.exists(output_dir):
+    checkpoint = get_last_checkpoint(output_dir)
 
 
 model, tokenizer = FastLanguageModel.from_pretrained(
