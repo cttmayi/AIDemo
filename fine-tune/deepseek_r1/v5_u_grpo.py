@@ -13,7 +13,7 @@ local_model_name = local_dir + "/models/Qwen2.5-3B" # "Qwen/Qwen2.5-3B-Instruct"
 local_data_name = local_dir + "/datasets/gsm8k" # "openai/gsm8k"
 max_seq_length = 1024 # Can increase for longer reasoning traces
 lora_rank = 64 # Larger rank = smarter, but slower
-output_dir = "outputs"
+output_dir = "outputs" 
 
 checkpoint = get_last_checkpoint(output_dir)
 
@@ -21,7 +21,7 @@ checkpoint = get_last_checkpoint(output_dir)
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = local_model_name,
     max_seq_length = max_seq_length,
-    load_in_4bit = True, # False for LoRA 16bit
+    load_in_4bit = False, # False for LoRA 16bit
     fast_inference = True, # Enable vLLM fast inference
     max_lora_rank = lora_rank,
     gpu_memory_utilization = 0.5, # Reduce if out of memory
