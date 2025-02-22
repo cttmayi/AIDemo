@@ -14,7 +14,8 @@ local_data_name = local_dir + "/datasets/gsm8k" # "openai/gsm8k"
 max_seq_length = 1024 # Can increase for longer reasoning traces
 lora_rank = 64 # Larger rank = smarter, but slower
 output_dir = local_dir + "/outputs/Qwen2.5-3B-GRPO"
-num_train_epochs = 0.01
+# num_train_epochs = 0.01
+max_steps = 50
 save_steps = 50
 
 checkpoint = None
@@ -22,6 +23,19 @@ if os.path.exists(output_dir):
     checkpoint = get_last_checkpoint(output_dir)
 print(f"Checkpoint: {checkpoint}")
 
+
+PREFIX_CHECKPOINT_DIR = "checkpoint"
+_re_checkpoint = re.compile(r"^" + PREFIX_CHECKPOINT_DIR + r"\-(\d+)$")
+
+def get_checkpoint_number(path):
+    path = os.path.basename(path)
+    if _re_checkpoint.search(path) is not None:
+        return int(_re_checkpoint.search(path).groups()[0])
+    return 0
+
+
+max_steps = get_checkpoint_number(checkpoint) + max_steps
+print(f"Max steps: {max_steps}")
 
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = local_model_name,
@@ -161,8 +175,8 @@ if __name__ == "__main__":
         max_prompt_length = 256,
         max_completion_length = 200,
         # num_train_epochs = 1, # Set to 1 for a full training run
-        num_train_epochs = num_train_epochs,
-        # max_steps = 250,
+        # num_train_epochs = num_train_epochs,
+        max_steps = max_steps,
         save_steps = save_steps,
         max_grad_norm = 0.1,
         report_to = "none", # Can use Weights & Biases
