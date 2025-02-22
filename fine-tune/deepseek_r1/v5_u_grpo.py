@@ -4,7 +4,7 @@ from unsloth import is_bfloat16_supported
 import torch
 import re
 from datasets import load_dataset, Dataset
-
+from transformers.trainer_utils import get_last_checkpoint
 from trl import GRPOConfig, GRPOTrainer
 
 local_dir = '/hy-tmp'
@@ -13,6 +13,9 @@ local_model_name = local_dir + "/models/Qwen2.5-3B" # "Qwen/Qwen2.5-3B-Instruct"
 local_data_name = local_dir + "/datasets/gsm8k" # "openai/gsm8k"
 max_seq_length = 1024 # Can increase for longer reasoning traces
 lora_rank = 64 # Larger rank = smarter, but slower
+output_dir = "outputs"
+
+checkpoint = get_last_checkpoint(output_dir)
 
 
 model, tokenizer = FastLanguageModel.from_pretrained(
@@ -157,7 +160,7 @@ if __name__ == "__main__":
         save_steps = 250,
         max_grad_norm = 0.1,
         report_to = "none", # Can use Weights & Biases
-        output_dir = "outputs",
+        output_dir = output_dir,
     )
 
     trainer = GRPOTrainer(
@@ -173,11 +176,11 @@ if __name__ == "__main__":
         args = training_args,
         train_dataset = dataset,
     )
-    trainer.train()
+    trainer.train(resume_from_checkpoint=checkpoint)
 
-    model.save_lora("grpo_saved_lora")
+    # model.save_lora("grpo_saved_lora")
 
-    if False:
+    if True:
         text = tokenizer.apply_chat_template([
             {"role" : "user", "content" : "How many r's are in strawberry?"},
         ], tokenize = False, add_generation_prompt = True)
