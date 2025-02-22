@@ -19,52 +19,18 @@ max_steps = 50
 save_steps = 50
 save_total_limit = 3
 
-checkpoint = None
-if os.path.exists(output_dir):
-    checkpoint = get_last_checkpoint(output_dir)
-print(f"===== Checkpoint: {checkpoint}")
+##########################################
 
 
 PREFIX_CHECKPOINT_DIR = "checkpoint"
 _re_checkpoint = re.compile(r"^" + PREFIX_CHECKPOINT_DIR + r"\-(\d+)$")
 
 def get_checkpoint_number(path):
-    path = os.path.basename(path)
-    if _re_checkpoint.search(path) is not None:
-        return int(_re_checkpoint.search(path).groups()[0])
+    if path is not None:
+        path = os.path.basename(path)
+        if _re_checkpoint.search(path) is not None:
+            return int(_re_checkpoint.search(path).groups()[0])
     return 0
-
-
-max_steps = get_checkpoint_number(checkpoint) + max_steps
-print(f"===== Max steps: {max_steps}")
-
-model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name = local_model_name,
-    max_seq_length = max_seq_length,
-    load_in_4bit = False, # False for LoRA 16bit
-    fast_inference = True, # Enable vLLM fast inference
-    max_lora_rank = lora_rank,
-    gpu_memory_utilization = 0.5, # Reduce if out of memory
-)
-
-
-# Load and prep model
-if tokenizer.chat_template is None:
-    tokenizer.chat_template = "{% for message in messages %}{{ '<|im_start|>' + message['role'] + '\\n' + message['content'] + '<|im_end|>' + '\\n' }}{% endfor %}"
-
-model = FastLanguageModel.get_peft_model(
-    model,
-    r = lora_rank, # Choose any number > 0 ! Suggested 8, 16, 32, 64, 128
-    target_modules = [
-        "q_proj", "k_proj", "v_proj", "o_proj",
-        "gate_proj", "up_proj", "down_proj",
-    ], # Remove QKVO if out of memory
-    lora_alpha = lora_rank,
-    use_gradient_checkpointing = "unsloth", # Enable long context finetuning
-    random_state = 3407,
-)
-
-
 
 # Load and prep dataset
 SYSTEM_PROMPT = """
@@ -107,7 +73,6 @@ def get_gsm8k_questions(split = "train") -> Dataset:
         'answer': extract_hash_answer(x['answer'])
     }) # type: ignore
     return data # type: ignore
-
 
 
 # Reward functions
@@ -156,6 +121,38 @@ def xmlcount_reward_func(completions, **kwargs) -> list[float]:
     return [count_xml(c) for c in contents]
 
 if __name__ == "__main__":
+    checkpoint = None
+    if os.path.exists(output_dir):
+        checkpoint = get_last_checkpoint(output_dir)
+    print(f"Checkpoint: {checkpoint}")
+
+    max_steps = get_checkpoint_number(checkpoint) + max_steps
+
+    # Load and prep model
+    model, tokenizer = FastLanguageModel.from_pretrained(
+        model_name = local_model_name,
+        max_seq_length = max_seq_length,
+        load_in_4bit = False, # False for LoRA 16bit
+        fast_inference = True, # Enable vLLM fast inference
+        max_lora_rank = lora_rank,
+        gpu_memory_utilization = 0.5, # Reduce if out of memory
+    )
+    
+    if tokenizer.chat_template is None:
+        tokenizer.chat_template = "{% for message in messages %}{{ '<|im_start|>' + message['role'] + '\\n' + message['content'] + '<|im_end|>' + '\\n' }}{% endfor %}"
+
+    model = FastLanguageModel.get_peft_model(
+        model,
+        r = lora_rank, # Choose any number > 0 ! Suggested 8, 16, 32, 64, 128
+        target_modules = [
+            "q_proj", "k_proj", "v_proj", "o_proj",
+            "gate_proj", "up_proj", "down_proj",
+        ], # Remove QKVO if out of memory
+        lora_alpha = lora_rank,
+        use_gradient_checkpointing = "unsloth", # Enable long context finetuning
+        random_state = 3407,
+    )
+
     dataset = get_gsm8k_questions()
 
     training_args = GRPOConfig(
@@ -199,15 +196,15 @@ if __name__ == "__main__":
         train_dataset = dataset,
     )
     trainer.train(resume_from_checkpoint=checkpoint)
-
     # model.save_lora("grpo_saved_lora")
 
     if True:
+        from vllm import SamplingParams
+        question = "How many r's are in strawberry?"
         text = tokenizer.apply_chat_template([
-            {"role" : "user", "content" : "How many r's are in strawberry?"},
+            {"role" : "user", "content" : question},
         ], tokenize = False, add_generation_prompt = True)
 
-        from vllm import SamplingParams
         sampling_params = SamplingParams(
             temperature = 0.8,
             top_p = 0.95,
@@ -219,17 +216,15 @@ if __name__ == "__main__":
             lora_request = None,
         )[0].outputs[0].text
 
-        print(output)
+        print("Question:", "How many r's are in strawberry?")
+        print("Answer[1]:", output)
 
 
-
-    if False:
         text = tokenizer.apply_chat_template([
             {"role" : "system", "content" : SYSTEM_PROMPT},
-            {"role" : "user", "content" : "How many r's are in strawberry?"},
+            {"role" : "user", "content" : question},
         ], tokenize = False, add_generation_prompt = True)
 
-        from vllm import SamplingParams
         sampling_params = SamplingParams(
             temperature = 0.8,
             top_p = 0.95,
@@ -241,7 +236,7 @@ if __name__ == "__main__":
             lora_request = model.load_lora("grpo_saved_lora"),
         )[0].outputs[0].text
 
-        print(output)
+        print("Answer[2]:", output)
 
     # Merge to 16bit
     if False: model.save_pretrained_merged("model", tokenizer, save_method = "merged_16bit",)
