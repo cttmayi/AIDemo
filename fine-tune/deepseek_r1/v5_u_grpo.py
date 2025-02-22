@@ -26,7 +26,7 @@ model, tokenizer = FastLanguageModel.from_pretrained(
 
 
 # Load and prep model
-if tokenizer,chat_template is None:
+if tokenizer.chat_template is None:
     tokenizer.chat_template = "{% for message in messages %}{{ '<|im_start|>' + message['role'] + '\\n' + message['content'] + '<|im_end|>' + '\\n' }}{% endfor %}"
 
 model = FastLanguageModel.get_peft_model(
