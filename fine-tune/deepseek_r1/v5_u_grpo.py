@@ -1,3 +1,6 @@
+import os
+local_dir = os.environ['LOCAL_DIR'] # '/hy-tmp'
+
 from unsloth import FastLanguageModel, PatchFastRL
 PatchFastRL("GRPO", FastLanguageModel)
 from unsloth import is_bfloat16_supported
@@ -7,7 +10,6 @@ from datasets import load_dataset, Dataset
 from transformers.trainer_utils import get_last_checkpoint
 from trl import GRPOConfig, GRPOTrainer
 
-local_dir = os.environ('LOCAL_DIR') # '/hy-tmp'
 
 local_model_name = local_dir + "/models/Qwen2.5-3B" # "Qwen/Qwen2.5-3B-Instruct",
 local_data_name = local_dir + "/datasets/gsm8k" # "openai/gsm8k"
