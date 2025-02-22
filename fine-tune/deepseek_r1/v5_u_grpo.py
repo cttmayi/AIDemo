@@ -17,6 +17,7 @@ output_dir = local_dir + "/outputs/Qwen2.5-3B-GRPO"
 # num_train_epochs = 0.01
 max_steps = 50
 save_steps = 50
+save_total_limit = 3
 
 checkpoint = None
 if os.path.exists(output_dir):
@@ -178,8 +179,9 @@ if __name__ == "__main__":
         # num_train_epochs = num_train_epochs,
         max_steps = max_steps,
         save_steps = save_steps,
+        save_total_limit= save_total_limit, # Keep only the last N checkpoints
         max_grad_norm = 0.1,
-        report_to = "none", # Can use Weights & Biases
+        report_to = "tensorboard", # Can use Weights & Biases
         output_dir = output_dir,
     )
 

@@ -26,5 +26,7 @@ pip install vllm
 
 pip install --upgrade pillow
 
+pip install tensorboard
+
 pip instlal nvitop
 
