@@ -24,6 +24,11 @@ model, tokenizer = FastLanguageModel.from_pretrained(
     gpu_memory_utilization = 0.5, # Reduce if out of memory
 )
 
+
+# Load and prep model
+if tokenizer,chat_template is None:
+    tokenizer.chat_template = "{% for message in messages %}{{ '<|im_start|>' + message['role'] + '\\n' + message['content'] + '<|im_end|>' + '\\n' }}{% endfor %}"
+
 model = FastLanguageModel.get_peft_model(
     model,
     r = lora_rank, # Choose any number > 0 ! Suggested 8, 16, 32, 64, 128
