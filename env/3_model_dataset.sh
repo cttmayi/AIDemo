@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 
-
-if [ ! -d "$LOCAL_DIR" ]; then
-    wget https://hf-mirror.com/hfd/hfd.sh
-    chmod a+x ./hfd.sh
-    move ./hfd.sh $LOCAL_BIN
-    pip install aria2
+# 如何LOCAL_DIR未定义，就退出
+if [ -z "$LOCAL_DIR" ]; then
+    echo "LOCAL_DIR is not defined"
+    exit 1
 fi
 
+if [ ! -d "$LOCAL_DIR/models/Qwen2.5-3B" ]; then
+    hfd.sh unsloth/Qwen2.5-3B --local-dir $LOCAL_DIR/models/Qwen2.5-3B
+fi
 
-hfd.sh unsloth/Qwen2.5-3B --local-dir $LOCAL_DIR/models
+if [ ! -d "$LOCAL_DIR/models/Qwen2.5-3B-Instruct" ]; then
+    hfd.sh unsloth/Qwen2.5-3B-Instruct --local-dir $LOCAL_DIR/models/Qwen2.5-3B-Instruct
+fi
 
-hfd.sh openai/gsm8k --dataset --local-dir $LOCAL_DIR/datasets
+if [ ! -d "$LOCAL_DIR/datasets/gsm8k" ]; then
+    hfd.sh openai/gsm8k --dataset --local-dir $LOCAL_DIR/datasets/gsm8k
+fi
 
