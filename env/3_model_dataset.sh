@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# 如何LOCAL_DIR未定义，就退出
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+source "$SCRIPT_DIR/env.sh"
+
 if [ -z "$LOCAL_DIR" ]; then
     echo "LOCAL_DIR is not defined"
     exit 1

@@ -30,3 +30,4 @@ pip install tensorboard
 
 pip instlal nvitop
 
+pip install aria2
