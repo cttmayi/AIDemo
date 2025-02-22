@@ -17,3 +17,5 @@
 /cache/
 /rag/graph/cache/
 /rag/graph/output/
+
+/unsloth_compiled_cache
