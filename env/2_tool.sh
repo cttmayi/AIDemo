@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 if [ -z "$LOCAL_TOOL" ]; then
     echo "LOCAL_TOOL is not defined"

@@ -7,7 +7,7 @@ from datasets import load_dataset, Dataset
 from transformers.trainer_utils import get_last_checkpoint
 from trl import GRPOConfig, GRPOTrainer
 
-local_dir = '/hy-tmp'
+local_dir = os.environ('LOCAL_DIR') # '/hy-tmp'
 
 local_model_name = local_dir + "/models/Qwen2.5-3B" # "Qwen/Qwen2.5-3B-Instruct",
 local_data_name = local_dir + "/datasets/gsm8k" # "openai/gsm8k"
@@ -17,22 +17,20 @@ output_dir = local_dir + "/outputs/Qwen2.5-3B-GRPO"
 # num_train_epochs = 0.01
 max_steps = 50
 save_steps = 50
-save_total_limit = 3
+save_total_limit = 1
 
 ##########################################
 
-
-PREFIX_CHECKPOINT_DIR = "checkpoint"
-_re_checkpoint = re.compile(r"^" + PREFIX_CHECKPOINT_DIR + r"\-(\d+)$")
-
 def get_checkpoint_number(path):
+    PREFIX_CHECKPOINT_DIR = "checkpoint"
+    _re_checkpoint = re.compile(r"^" + PREFIX_CHECKPOINT_DIR + r"\-(\d+)$")
     if path is not None:
         path = os.path.basename(path)
         if _re_checkpoint.search(path) is not None:
             return int(_re_checkpoint.search(path).groups()[0])
     return 0
 
-# Load and prep dataset
+
 SYSTEM_PROMPT = """
 Respond in the following format:
 <reasoning>
@@ -51,6 +49,8 @@ XML_COT_FORMAT = """\
 {answer}
 </answer>
 """
+
+DEFAULT_CHAT_TEMPLATE = "{% for message in messages %}{{ '<|im_start|>' + message['role'] + '\\n' + message['content'] + '<|im_end|>' + '\\n' }}{% endfor %}"
 
 def extract_xml_answer(text: str) -> str:
     answer = text.split("<answer>")[-1]
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     )
     
     if tokenizer.chat_template is None:
-        tokenizer.chat_template = "{% for message in messages %}{{ '<|im_start|>' + message['role'] + '\\n' + message['content'] + '<|im_end|>' + '\\n' }}{% endfor %}"
+        tokenizer.chat_template = DEFAULT_CHAT_TEMPLATE
 
     model = FastLanguageModel.get_peft_model(
         model,

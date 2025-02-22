@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # 如何LOCAL_DIR未定义，就退出
 if [ -z "$LOCAL_DIR" ]; then
