@@ -23,7 +23,6 @@ if os.path.exists(output_dir):
 print(f"Checkpoint: {checkpoint}")
 
 
-
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = local_model_name,
     max_seq_length = max_seq_length,
