@@ -40,5 +40,16 @@ upload() {
 }
 
 
-upload "outputs"
+
+# 如果第一个参数是 "-a"，则上传所有文件夹 否则只上传指定文件夹
+if [ "$1" = "all" ]; then
+    for folder in */; do
+        upload "${folder}"
+    done
+else
+    upload "outputs"
+fi
+
+
+
 # shutdown
