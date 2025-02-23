@@ -16,6 +16,7 @@ upload() {
     # 检查文件夹是否存在
     if [ -d "$folder" ]; then
         local file="${folder}.tar"  # 定义压缩文件名
+        echo "Zipping folder: $folder"
 
         # 压缩文件夹
         # zip -q -r "${file}" "$folder"
@@ -47,12 +48,17 @@ if [ "$1" = "all" ]; then
     for folder in */; do
         folder="${folder%/}"  # 去掉末尾的斜杠
         echo "Uploading folder: $folder"
-        upload "${folder}"
+        upload "${folder}" &
     done
 else
-    upload "outputs"
+    upload "outputs" &
 fi
 
+wait
 
 
+# 如果第一个或者第二个参数为 “shutdown” 则关机
+if [ "$1" = "shutdown" ] || [ "$2" = "shutdown" ]; then
+    shutdown -h now
+fi
 # shutdown

@@ -8,9 +8,10 @@ oss login
 cd $LOCAL_DIR || exit
 
 # 定义函数
-copy() {
+donwload() {
     local folder="$1"  # 使用局部变量接收传入的参数
     local file="${folder}.tar"
+    echo "Downloading $file from OSS..."
 
     # 从 OSS 下载文件
     oss cp "oss://hy-tmp/${file}" .
@@ -24,6 +25,9 @@ copy() {
     fi
 }
 
-copy "outputs"
-copy "models"
-copy "datasets"
+donwload "outputs" &
+donwload "models" &
+donwload "datasets" &
+
+wait
+echo "All files downloaded successfully."
