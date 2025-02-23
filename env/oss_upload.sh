@@ -41,9 +41,10 @@ upload() {
 
 
 
-# 如果第一个参数是 "-a"，则上传所有文件夹 否则只上传指定文件夹
+# 如果第一个参数是 "allls"，则上传所有文件夹 否则只上传指定文件夹
 if [ "$1" = "all" ]; then
     for folder in */; do
+        folder="${folder%/}"  # 去掉末尾的斜杠
         upload "${folder}"
     done
 else
