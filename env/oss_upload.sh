@@ -7,7 +7,7 @@ oss login
 
 oss mkdir oss://hy-tmp/
 
-cd ~/cache || exit
+cd $LOCAL_DIR || exit
 
 # 定义函数
 upload() {
@@ -15,10 +15,11 @@ upload() {
 
     # 检查文件夹是否存在
     if [ -d "$folder" ]; then
-        local file="${folder}.zip"  # 定义压缩文件名
+        local file="${folder}.tar"  # 定义压缩文件名
 
         # 压缩文件夹
-        zip -q -r "${file}" "$folder"
+        # zip -q -r "${file}" "$folder"
+        tar -cf "${file}" "$folder"
         if [ $? -ne 0 ]; then
             echo "Error: Failed to zip the folder $folder."
             return 1
@@ -45,6 +46,7 @@ upload() {
 if [ "$1" = "all" ]; then
     for folder in */; do
         folder="${folder%/}"  # 去掉末尾的斜杠
+        echo "Uploading folder: $folder"
         upload "${folder}"
     done
 else
