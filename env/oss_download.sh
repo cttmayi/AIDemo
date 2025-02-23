@@ -25,3 +25,5 @@ copy() {
 }
 
 copy "outputs"
+copy "models"
+copy "datasets"
