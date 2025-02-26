@@ -199,7 +199,7 @@ if __name__ == "__main__":
     )
     trainer.train(resume_from_checkpoint=checkpoint)
     # model.save_lora("grpo_saved_lora")
-    trainer.save_model("grpo_saved_all")
+    trainer.save_model("grpo_saved_lora")
 
     if True:
         from vllm import SamplingParams
