@@ -198,7 +198,8 @@ if __name__ == "__main__":
         train_dataset = dataset,
     )
     trainer.train(resume_from_checkpoint=checkpoint)
-    model.save_lora("~/grpo_saved_lora")
+    # model.save_lora("grpo_saved_lora")
+    model.save("grpo_saved_all")
 
     if True:
         from vllm import SamplingParams
