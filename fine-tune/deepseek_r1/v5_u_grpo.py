@@ -198,8 +198,8 @@ if __name__ == "__main__":
         train_dataset = dataset,
     )
     trainer.train(resume_from_checkpoint=checkpoint)
-    # model.save_lora("grpo_saved_lora")
-    trainer.save_model("grpo_saved_lora")
+    model.save_lora("grpo_saved_lora")
+    # trainer.save_model("grpo_saved_lora")
 
     if True:
         from vllm import SamplingParams
@@ -242,7 +242,7 @@ if __name__ == "__main__":
         print("Answer[2]:", output)
 
     # Merge to 16bit
-    if False: model.save_pretrained_merged("model", tokenizer, save_method = "merged_16bit",)
+    if True: model.save_pretrained_merged("model", tokenizer, save_method = "merged_16bit",)
     if False: model.push_to_hub_merged("hf/model", tokenizer, save_method = "merged_16bit", token = "")
 
     # Merge to 4bit
