@@ -8,6 +8,6 @@ OUTPUT_DIR=data/evals/$MODEL
 # AIME 2024
 TASK=aime24
 lighteval vllm $MODEL_ARGS "custom|$TASK|0|0" \
-    --custom-tasks eval.py \
+    --custom-tasks fine-tune/deepseek_r1/eval.py \
     --use-chat-template \
     --output-dir $OUTPUT_DIR
