@@ -31,3 +31,5 @@ pip install tensorboard
 pip instlal nvitop
 
 pip install aria2
+
+pip install lighteval

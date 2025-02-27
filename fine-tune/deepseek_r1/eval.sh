@@ -2,7 +2,7 @@
 
 # MODEL=deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
 MODEL=grpo_saved_lora
-MODEL_ARGS="pretrained=$MODEL,dtype=bfloat16,max_model_length=32768,gpu_memory_utilisation=0.8"
+MODEL_ARGS="pretrained=$MODEL,dtype=bfloat16,max_model_length=32768"
 OUTPUT_DIR=data/evals/$MODEL
 
 # AIME 2024
