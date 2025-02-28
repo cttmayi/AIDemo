@@ -1,16 +1,3 @@
-# Copyright 2025 The HuggingFace Team. All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
 """Custom evaluation tasks for LightEval."""
 
@@ -24,6 +11,30 @@ from lighteval.tasks.lighteval_task import LightevalTaskConfig
 from lighteval.tasks.requests import Doc
 from lighteval.utils.language import Language
 
+from aenum import extend_enum
+from lighteval.metrics import Metrics
+
+# https://github.com/huggingface/lighteval/blob/main/docs/source/adding-a-new-metric.mdx
+def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
+    response = predictions[0]
+    return response == formatted_doc.choices[formatted_doc.gold_index]
+
+
+def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> dict:
+    response = predictions[0]
+    return {"accuracy": response == formatted_doc.choices[formatted_doc.gold_index], "other_metric": 0.5}
+
+
+my_custom_metric = SampleLevelMetric(
+    metric_name={"custom_metric_name"},
+    higher_is_better=True,
+    category={MetricCategory},
+    use_case={MetricUseCase},
+    sample_level_fn=custom_metric,
+    corpus_level_fn=agg_function,
+)
+
+
 expr_gold_metric = multilingual_extractive_match_metric(
     language=Language.ENGLISH,
     fallback_mode="first_match",
@@ -34,6 +45,8 @@ expr_gold_metric = multilingual_extractive_match_metric(
     aggregation_function=max,
 )
 
+
+# https://github.com/huggingface/lighteval/blob/main/docs/source/adding-a-custom-task.mdx
 def aime_prompt_fn(line, task_name: str = None):
     return Doc(
         task_name=task_name,
@@ -59,9 +72,10 @@ aime24 = LightevalTaskConfig(
 )
 
 
-# Add tasks to the table
-TASKS_TABLE = []
-TASKS_TABLE.append(aime24)
+
+TASKS_TABLE = [
+    aime24,
+]
 
 # MODULE LOGIC
 if __name__ == "__main__":

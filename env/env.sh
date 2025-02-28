@@ -11,13 +11,13 @@ mkdir -p $LOCAL_TOOL
 if [[ ":$PATH:" != *":$LOCAL_TOOL:"* ]]; then
     export PATH=$LOCAL_TOOL:$PATH
     #echo "export PATH=$PATH"
-    echo "OK"
 fi
 
 # HF 镜像
 export HF_ENDPOINT=https://hf-mirror.com
 
 # 配置临时目录
-export LOCAL_DIR=~/cache
+# export LOCAL_DIR=~/cache
+export LOCAL_DIR=/hy-tmp
 
 

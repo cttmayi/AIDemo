@@ -76,7 +76,6 @@ def get_gsm8k_questions(split = "train") -> Dataset:
     }) # type: ignore
     return data # type: ignore
 
-
 # Reward functions
 def correctness_reward_func(prompts, completions, answer, **kwargs) -> list[float]:
     responses = [completion[0]['content'] for completion in completions]
@@ -139,7 +138,7 @@ if __name__ == "__main__":
         max_lora_rank = lora_rank,
         gpu_memory_utilization = 0.5, # Reduce if out of memory
     )
-    
+
     if tokenizer.chat_template is None:
         tokenizer.chat_template = DEFAULT_CHAT_TEMPLATE
 
@@ -222,7 +221,6 @@ if __name__ == "__main__":
         print("Question:", "How many r's are in strawberry?")
         print("Answer[1]:", output)
 
-
         text = tokenizer.apply_chat_template([
             {"role" : "system", "content" : SYSTEM_PROMPT},
             {"role" : "user", "content" : question},
@@ -233,6 +231,7 @@ if __name__ == "__main__":
             top_p = 0.95,
             max_tokens = 1024,
         )
+
         output = model.fast_generate(
             text,
             sampling_params = sampling_params,
