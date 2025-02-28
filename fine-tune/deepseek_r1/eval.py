@@ -11,8 +11,8 @@ from lighteval.tasks.lighteval_task import LightevalTaskConfig
 from lighteval.tasks.requests import Doc
 from lighteval.utils.language import Language
 
-from aenum import extend_enum
-from lighteval.metrics import Metrics
+# from aenum import extend_enum
+# from lighteval.metrics import Metrics
 
 # https://github.com/huggingface/lighteval/blob/main/docs/source/adding-a-new-metric.mdx
 # def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
