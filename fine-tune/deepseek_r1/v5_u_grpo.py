@@ -16,6 +16,7 @@ local_data_name = local_dir + "/datasets/gsm8k" # "openai/gsm8k"
 max_seq_length = 1024 # Can increase for longer reasoning traces
 lora_rank = 64 # Larger rank = smarter, but slower
 output_dir = local_dir + "/outputs/Qwen2.5-3B-GRPO"
+save_model_dir = local_dir + "/models/Qwen2.5-3B-GRPO"
 # num_train_epochs = 0.01
 max_steps = 50
 save_steps = 50
@@ -241,7 +242,7 @@ if __name__ == "__main__":
         print("Answer[2]:", output)
 
     # Merge to 16bit
-    if True: model.save_pretrained_merged("model", tokenizer, save_method = "merged_16bit",)
+    if True: model.save_pretrained_merged(save_model_dir, tokenizer, save_method = "merged_16bit",)
     if False: model.push_to_hub_merged("hf/model", tokenizer, save_method = "merged_16bit", token = "")
 
     # Merge to 4bit
