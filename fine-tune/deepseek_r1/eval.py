@@ -11,13 +11,24 @@ from lighteval.tasks.lighteval_task import LightevalTaskConfig
 from lighteval.tasks.requests import Doc
 from lighteval.utils.language import Language
 
-# from aenum import extend_enum
-# from lighteval.metrics import Metrics
+from lighteval.metrics.sample_preparator import GenerativePreparator, LoglikelihoodPreparator, PerplexityPreparator
+from lighteval.metrics.utils.metric_utils import (
+    CorpusLevelMetric,
+    CorpusLevelMetricGrouping,
+    Metric,
+    MetricCategory,
+    MetricGrouping,
+    MetricUseCase,
+    SampleLevelMetric,
+    SampleLevelMetricGrouping,
+)
+from lighteval.utils.language import Language
+from lighteval.utils.utils import as_list
 
 # https://github.com/huggingface/lighteval/blob/main/docs/source/adding-a-new-metric.mdx
-# def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
-#     response = predictions[0]
-#     return response == formatted_doc.choices[formatted_doc.gold_index]
+def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
+    response = predictions[0]
+    return response == formatted_doc.choices[formatted_doc.gold_index]
 
 
 # def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> dict:
@@ -25,14 +36,14 @@ from lighteval.utils.language import Language
 #     return {"accuracy": response == formatted_doc.choices[formatted_doc.gold_index], "other_metric": 0.5}
 
 
-# my_custom_metric = SampleLevelMetric(
-#     metric_name={"custom_metric_name"},
-#     higher_is_better=True,
-#     category={MetricCategory},
-#     use_case={MetricUseCase},
-#     sample_level_fn=custom_metric,
-#     corpus_level_fn=agg_function,
-# )
+my_custom_metric = SampleLevelMetric(
+    metric_name={"custom_metric_name"},
+    higher_is_better=True,
+    category={MetricCategory},
+    use_case={MetricUseCase},
+    sample_level_fn=custom_metric,
+    # corpus_level_fn=agg_function,
+)
 
 
 expr_gold_metric = multilingual_extractive_match_metric(
@@ -67,10 +78,10 @@ aime24 = LightevalTaskConfig(
     few_shots_split=None,
     few_shots_select=None,
     generation_size=32768,
-    metric=[expr_gold_metric],
+    # metric=[expr_gold_metric],
+    metric=[my_custom_metric],
     version=1,
 )
-
 
 
 TASKS_TABLE = [
