@@ -25,9 +25,16 @@ from lighteval.metrics.utils.metric_utils import (
 )
 from lighteval.metrics.utils.metric_utils import MetricCategory, MetricUseCase, SampleLevelMetric
 
+
+def extract_xml_answer(text: str) -> str:
+    answer = text.split("<answer>")[-1]
+    answer = answer.split("</answer>")[0]
+    return answer.strip()
+
 # https://github.com/huggingface/lighteval/blob/main/docs/source/adding-a-new-metric.mdx
 def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
     response = predictions[0]
+    response = extract_xml_answer(response)
     print('C', response, '===', formatted_doc.choices[formatted_doc.gold_index])
     return 1 if response == formatted_doc.choices[formatted_doc.gold_index] else 0
 
