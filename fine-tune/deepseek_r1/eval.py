@@ -44,8 +44,10 @@ def agg_function(items):
 my_custom_metric = SampleLevelMetric(
     metric_name={"custom_metric_name"},
     higher_is_better=True,
-    category=MetricCategory.GENERATIVE,
-    use_case=MetricUseCase.ACCURACY,
+    # category=MetricCategory.GENERATIVE,
+    # use_case=MetricUseCase.ACCURACY,
+    category={MetricCategory},
+    use_case={MetricUseCase},
     sample_level_fn=custom_metric,
     corpus_level_fn=agg_function,
 )
