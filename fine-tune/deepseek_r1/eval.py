@@ -28,6 +28,7 @@ from lighteval.metrics.utils.metric_utils import (
 # https://github.com/huggingface/lighteval/blob/main/docs/source/adding-a-new-metric.mdx
 def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
     response = predictions[0]
+    print('C', response, predictions[0])
     return response == formatted_doc.choices[formatted_doc.gold_index]
 
 
