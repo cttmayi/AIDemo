@@ -35,8 +35,11 @@ model, tokenizer = FastLanguageModel.from_pretrained(
 #         active_adapter = active_adapters[0]
 #     else:
 #         active_adapter = model.active_adapter
-active_adapter = "adapter_model.safetensors"
-model.load_adapter(resume_from_checkpoint, active_adapter, is_trainable=False)
+active_adapter = "adapter_model"
+model.load_adapter(
+    resume_from_checkpoint, 
+    # active_adapter, 
+    is_trainable=False)
 
 
 # Merge to 16bit
