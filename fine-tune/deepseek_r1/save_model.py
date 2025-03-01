@@ -20,8 +20,6 @@ model, tokenizer = FastLanguageModel.from_pretrained(
     fast_inference = True, # Enable vLLM fast inference
     max_lora_rank = lora_rank,
     gpu_memory_utilization = 0.5, # Reduce if out of memory
-    device_map = "cpu",
-
 )
 
 resume_from_checkpoint = get_last_checkpoint(output_dir)
@@ -30,13 +28,14 @@ if resume_from_checkpoint is not None:
     # For BC for older PEFT versions
     if hasattr(model, "active_adapters"):
         active_adapters = model.active_adapters
+        print(f"Active adapters: {active_adapters}")
         if len(active_adapters) > 1:
             print("Multiple active adapters detected will only consider the first adapter")
         active_adapter = active_adapters[0]
     else:
         active_adapter = model.active_adapter
 
-    model.load_adapter(resume_from_checkpoint, active_adapter, is_trainable=True)
+    model.load_adapter(resume_from_checkpoint, active_adapter, is_trainable=False)
 
 
 # Merge to 16bit
