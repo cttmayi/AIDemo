@@ -28,13 +28,9 @@ from lighteval.metrics.utils.metric_utils import MetricCategory, MetricUseCase, 
 # https://github.com/huggingface/lighteval/blob/main/docs/source/adding-a-new-metric.mdx
 def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
     response = predictions[0]
-    print('C', response, formatted_doc.choices[formatted_doc.gold_index])
+    print('C', response, '===', formatted_doc.choices[formatted_doc.gold_index])
     return 1 if response == formatted_doc.choices[formatted_doc.gold_index] else 0
 
-
-# def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> dict:
-#     response = predictions[0]
-#     return {"accuracy": response == formatted_doc.choices[formatted_doc.gold_index], "other_metric": 0.5}
 
 def agg_function(items):
     flat_items = [item for item in items ]
