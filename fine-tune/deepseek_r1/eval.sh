@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # MODEL=deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
-# MODEL="$LOCAL_DIR/temp/Qwen2.5-3B-GRPO"
-MODEL="$LOCAL_DIR/models/Qwen2.5-3B"
-MODEL_ARGS="pretrained=$MODEL,dtype=bfloat16,max_model_length=32768,use_chat_template=true"
+MODEL="$LOCAL_DIR/temp/Qwen2.5-3B-GRPO"
+# MODEL="$LOCAL_DIR/models/Qwen2.5-3B"
+MODEL_ARGS="pretrained=$MODEL,dtype=bfloat16,use_chat_template=true"
 OUTPUT_DIR=data/evals/$MODEL
 
 # AIME 2024
