@@ -16,7 +16,7 @@ local_data_name = local_dir + "/datasets/gsm8k" # "openai/gsm8k"
 max_seq_length = 1024 # Can increase for longer reasoning traces
 lora_rank = 64 # Larger rank = smarter, but slower
 output_dir = local_dir + "/outputs/Qwen2.5-3B-GRPO"
-save_model_dir = local_dir + "/outputs/Qwen2.5-3B-GRPO"
+save_model_dir = local_dir + "/temp/Qwen2.5-3B-GRPO"
 # num_train_epochs = 0.01
 max_steps = 50
 save_steps = 50
