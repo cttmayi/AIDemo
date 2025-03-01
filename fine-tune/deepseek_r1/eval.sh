@@ -18,4 +18,7 @@ TASK=aime24
 
 lighteval vllm \
     "$SCRIPT_DIR/vllm_model_config.yaml" \
-    "custom|$TASK|0|0"
+    "custom|$TASK|0|0" \
+    --custom-tasks fine-tune/deepseek_r1/eval.py \
+    --use-chat-template \
+    --output-dir $OUTPUT_DIR
