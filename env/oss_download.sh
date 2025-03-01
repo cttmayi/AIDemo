@@ -25,9 +25,16 @@ donwload() {
     fi
 }
 
+
 donwload "outputs" &
-donwload "models" &
-donwload "datasets" &
+
+if [ ! -d "models" ]; then
+    donwload "models" &
+fi
+
+if [ ! -d "datasets" ]; then
+    donwload "datasets" &
+fi
 
 wait
 echo "All files downloaded successfully."
