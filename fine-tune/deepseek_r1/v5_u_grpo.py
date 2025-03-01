@@ -18,7 +18,7 @@ lora_rank = 64 # Larger rank = smarter, but slower
 output_dir = local_dir + "/outputs/Qwen2.5-3B-GRPO"
 save_model_dir = local_dir + "/temp/Qwen2.5-3B-GRPO"
 # num_train_epochs = 0.01
-max_steps = 50
+max_steps = 5000
 save_steps = 50
 save_total_limit = 1
 
