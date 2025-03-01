@@ -10,4 +10,4 @@ model: # Model specific parameters
     top_k: -1
     min_p: 0.0
     top_p: 0.9
-    max_new_tokens: 1024
+    max_new_tokens: 4096
