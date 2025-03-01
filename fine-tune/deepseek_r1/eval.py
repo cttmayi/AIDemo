@@ -1,5 +1,6 @@
 
 """Custom evaluation tasks for LightEval."""
+import numpy as np
 
 from lighteval.metrics.dynamic_metrics import (
     ExprExtractionConfig,
@@ -22,8 +23,7 @@ from lighteval.metrics.utils.metric_utils import (
     SampleLevelMetric,
     SampleLevelMetricGrouping,
 )
-from lighteval.utils.language import Language
-from lighteval.utils.utils import as_list
+
 
 # https://github.com/huggingface/lighteval/blob/main/docs/source/adding-a-new-metric.mdx
 def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
@@ -42,7 +42,7 @@ my_custom_metric = SampleLevelMetric(
     category={MetricCategory},
     use_case={MetricUseCase},
     sample_level_fn=custom_metric,
-    # corpus_level_fn=agg_function,
+    corpus_level_fn=np.mean,
 )
 
 

@@ -18,4 +18,6 @@
 /rag/graph/cache/
 /rag/graph/output/
 
-/unsloth_compiled_cache
+/unsloth_compiled_cache/
+
+/lighteval/
