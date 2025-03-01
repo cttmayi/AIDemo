@@ -37,7 +37,7 @@ def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
 #     return {"accuracy": response == formatted_doc.choices[formatted_doc.gold_index], "other_metric": 0.5}
 
 def agg_function(items):
-    flat_items = [item for sublist in items for item in sublist]
+    flat_items = [item for item in items ]
     score = sum(flat_items) / len(flat_items)
     return score
 
