@@ -90,5 +90,5 @@ TASKS_TABLE = [
 
 # MODULE LOGIC
 if __name__ == "__main__":
-    print([t["name"] for t in TASKS_TABLE])
+    print([t for t in TASKS_TABLE])
     print(len(TASKS_TABLE))
