@@ -29,7 +29,7 @@ from lighteval.metrics.utils.metric_utils import MetricCategory, MetricUseCase, 
 def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
     response = predictions[0]
     print('C', response, predictions[0])
-    return response == formatted_doc.choices[formatted_doc.gold_index]
+    return 1 if response == formatted_doc.choices[formatted_doc.gold_index] else 0
 
 
 # def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> dict:
