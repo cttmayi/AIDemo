@@ -22,4 +22,4 @@ lighteval vllm \
     --custom-tasks fine-tune/deepseek_r1/eval.py \
     --use-chat-template \
     --output-dir $OUTPUT_DIR \
-    --system-prompt="Respond in the following format: \n\n<question>\n...\n</question>\n\n<reasoning>\n...\n</reasoning>\n\n<answer>\n...\n</answer>"
+    --system-prompt="\nRespond in the following format:\n<question>\n...\n</question>\n<reasoning>\n...\n</reasoning>\n<answer>\n...\n</answer>\n"
