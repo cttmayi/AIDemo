@@ -36,6 +36,10 @@ def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
 #     response = predictions[0]
 #     return {"accuracy": response == formatted_doc.choices[formatted_doc.gold_index], "other_metric": 0.5}
 
+def agg_function(items):
+    flat_items = [item for sublist in items for item in sublist]
+    score = sum(flat_items) / len(flat_items)
+    return score
 
 my_custom_metric = SampleLevelMetric(
     metric_name={"custom_metric_name"},
@@ -43,7 +47,7 @@ my_custom_metric = SampleLevelMetric(
     category=MetricCategory.GENERATIVE,
     use_case=MetricUseCase.ACCURACY,
     sample_level_fn=custom_metric,
-    corpus_level_fn=np.mean,
+    corpus_level_fn=agg_function,
 )
 
 
