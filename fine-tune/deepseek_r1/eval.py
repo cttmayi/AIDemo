@@ -23,7 +23,7 @@ from lighteval.metrics.utils.metric_utils import (
     SampleLevelMetric,
     SampleLevelMetricGrouping,
 )
-
+from lighteval.metrics.utils.metric_utils import MetricCategory, MetricUseCase, SampleLevelMetric
 
 # https://github.com/huggingface/lighteval/blob/main/docs/source/adding-a-new-metric.mdx
 def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
@@ -40,8 +40,8 @@ def custom_metric(predictions: list[str], formatted_doc: Doc, **kwargs) -> bool:
 my_custom_metric = SampleLevelMetric(
     metric_name={"custom_metric_name"},
     higher_is_better=True,
-    category={MetricCategory},
-    use_case={MetricUseCase},
+    category=MetricCategory.GENERATIVE,
+    use_case=MetricUseCase.ACCURACY,
     sample_level_fn=custom_metric,
     corpus_level_fn=np.mean,
 )
@@ -79,8 +79,8 @@ aime24 = LightevalTaskConfig(
     few_shots_split=None,
     few_shots_select=None,
     generation_size=32768,
-    metric=[expr_gold_metric],
-    # metric=[my_custom_metric],
+    # metric=[expr_gold_metric],
+    metric=[my_custom_metric],
     version=1,
 )
 
