@@ -24,21 +24,12 @@ model, tokenizer = FastLanguageModel.from_pretrained(
     gpu_memory_utilization = 0.5, # Reduce if out of memory
 )
 
+DEFAULT_CHAT_TEMPLATE = "{% for message in messages %}{{ '<|im_start|>' + message['role'] + '\\n' + message['content'] + '<|im_end|>' + '\\n' }}{% endfor %}"
+if tokenizer.chat_template is None:
+    tokenizer.chat_template = DEFAULT_CHAT_TEMPLATE
 
-# if resume_from_checkpoint is not None:
-#     # For BC for older PEFT versions
-#     if hasattr(model, "active_adapters"):
-#         active_adapters = model.active_adapters
-#         print(f"Active adapters: {active_adapters}")
-#         if len(active_adapters) > 1:
-#             print("Multiple active adapters detected will only consider the first adapter")
-#         active_adapter = active_adapters[0]
-#     else:
-#         active_adapter = model.active_adapter
-active_adapter = "adapter_model"
 model.load_adapter(
     resume_from_checkpoint, 
-    # active_adapter, 
     is_trainable=False)
 
 
