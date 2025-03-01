@@ -12,7 +12,7 @@ output_dir = local_dir + "/outputs/Qwen2.5-3B-GRPO"
 save_model_dir = local_dir + "/temp/Qwen2.5-3B-GRPO"
 
 resume_from_checkpoint = get_last_checkpoint(output_dir)
-local_model_name = resume_from_checkpoint if resume_from_checkpoint is not None else local_model_name
+# local_model_name = resume_from_checkpoint if resume_from_checkpoint is not None else local_model_name
 
 # Load and prep model
 model, tokenizer = FastLanguageModel.from_pretrained(
@@ -35,8 +35,8 @@ model, tokenizer = FastLanguageModel.from_pretrained(
 #         active_adapter = active_adapters[0]
 #     else:
 #         active_adapter = model.active_adapter
-
-#     model.load_adapter(resume_from_checkpoint, active_adapter, is_trainable=False)
+active_adapter = "adapter_model.safetensors"
+model.load_adapter(resume_from_checkpoint, active_adapter, is_trainable=False)
 
 
 # Merge to 16bit
