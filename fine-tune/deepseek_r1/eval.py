@@ -42,7 +42,7 @@ def agg_function(items):
     return score
 
 my_custom_metric = SampleLevelMetric(
-    metric_name={"custom_metric_name"},
+    metric_name="custom_metric_name",
     higher_is_better=True,
     category=MetricCategory.GENERATIVE,
     use_case=MetricUseCase.ACCURACY,
