@@ -20,6 +20,8 @@ model, tokenizer = FastLanguageModel.from_pretrained(
     fast_inference = True, # Enable vLLM fast inference
     max_lora_rank = lora_rank,
     gpu_memory_utilization = 0.5, # Reduce if out of memory
+    device_map = "cpu",
+
 )
 
 resume_from_checkpoint = get_last_checkpoint(output_dir)
