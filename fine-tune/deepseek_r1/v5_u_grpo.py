@@ -10,17 +10,34 @@ from datasets import load_dataset, Dataset
 from transformers.trainer_utils import get_last_checkpoint
 from trl import GRPOConfig, GRPOTrainer
 
+# 命令行参数
+from argparse import ArgumentParser
+parser = ArgumentParser()
+parser.add_argument("--local_dir", type=str, default=local_dir)
+parser.add_argument("--local_model_name", type=str, default=local_dir + "/models/Qwen2.5-3B")
+parser.add_argument("--local_data_name", type=str, default=local_dir + "/datasets/gsm8k")
+parser.add_argument("--max_seq_length", type=int, default=1024)
+parser.add_argument("--lora_rank", type=int, default=64)
+parser.add_argument("--output_dir", type=str, default=local_dir + "/outputs/Qwen2.5-3B-GRPO")
+parser.add_argument("--save_model_dir", type=str, default=local_dir + "/temp/Qwen2.5-3B-GRPO")
+parser.add_argument("--num_train_epochs", type=float, default=0.01)
+parser.add_argument("--max_steps", type=int, default=5000)
+parser.add_argument("--save_steps", type=int, default=50)
+parser.add_argument("--save_total_limit", type=int, default=1)
 
-local_model_name = local_dir + "/models/Qwen2.5-3B" # "Qwen/Qwen2.5-3B-Instruct",
-local_data_name = local_dir + "/datasets/gsm8k" # "openai/gsm8k"
-max_seq_length = 1024 # Can increase for longer reasoning traces
-lora_rank = 64 # Larger rank = smarter, but slower
-output_dir = local_dir + "/outputs/Qwen2.5-3B-GRPO"
-save_model_dir = local_dir + "/temp/Qwen2.5-3B-GRPO"
-# num_train_epochs = 0.01
-max_steps = 5000
-save_steps = 50
-save_total_limit = 1
+args = parser.parse_args()
+
+local_dir = args.local_dir
+local_model_name = args.local_model_name
+local_data_name = args.local_data_name
+max_seq_length = args.max_seq_length
+lora_rank = args.lora_rank
+output_dir = args.output_dir
+save_model_dir = args.save_model_dir
+# num_train_epochs = args.num_train_epochs
+max_steps = args.max_steps
+save_steps = args.save_steps
+save_total_limit = args.save_total_limit
 
 ##########################################
 
