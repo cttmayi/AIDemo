@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # MODEL=deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
-MODEL="$LOCAL_DIR/models/Qwen2.5-3B-GRPO"
+MODEL="$LOCAL_DIR/temp/Qwen2.5-3B-GRPO"
 MODEL_ARGS="pretrained=$MODEL,dtype=bfloat16,max_model_length=32768"
 OUTPUT_DIR=data/evals/$MODEL
 
