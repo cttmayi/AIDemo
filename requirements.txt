@@ -34,7 +34,6 @@ filelock==3.17.0
 frozenlist==1.5.0
 fsspec==2024.12.0
 gguf==0.10.0
-gmpy2 @ file:///croot/gmpy2_1738085463648/work
 grpcio==1.70.0
 h11==0.14.0
 hf_transfer==0.1.9
@@ -46,25 +45,22 @@ idna==3.10
 importlib_metadata==8.6.1
 iniconfig==2.0.0
 interegular==0.3.3
-Jinja2 @ file:///croot/jinja2_1737760107953/work
 jiter==0.8.2
 jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 lark==1.2.2
+lighteval @ git+https://kkgithub.com/huggingface/lighteval.git@f2ddc520698a5c015d0d8d7b10ec3148b51c00b5
 llvmlite==0.43.0
 lm-format-enforcer==0.10.10
 Markdown==3.7
 markdown-it-py==3.0.0
-MarkupSafe @ file:///croot/markupsafe_1738584038848/work
 mdurl==0.1.2
 mistral_common==1.5.3
-mpmath @ file:///croot/mpmath_1690848262763/work
 msgpack==1.1.0
 msgspec==0.19.0
 multidict==6.1.0
 multiprocess==0.70.16
 nest-asyncio==1.6.0
-networkx @ file:///croot/networkx_1737039604450/work
 numba==0.60.0
 numpy==1.26.4
 nvidia-ml-py==12.570.86
@@ -96,7 +92,6 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python-multipart==0.0.20
 pytz==2025.1
-PyYAML @ file:///croot/pyyaml_1728657952215/work
 pyzmq==26.2.1
 ray==2.40.0
 referencing==0.36.2
@@ -126,8 +121,7 @@ transformers==4.49.0
 triton==3.1.0
 trl==0.15.1
 typeguard==4.4.2
-typer==0.15.1
-typing_extensions @ file:///croot/typing_extensions_1734714854207/work
+typer==0.9.4
 tyro==0.9.16
 tzdata==2025.1
 unsloth @ git+https://kkgithub.com/unslothai/unsloth.git@575ef4d9c094d1c6d13f5414df4e7580347529ee
