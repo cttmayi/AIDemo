@@ -21,7 +21,7 @@ parser.add_argument("--lora_rank", type=int, default=64)
 parser.add_argument("--output_dir", type=str, default=local_dir + "/outputs/Qwen2.5-3B-GRPO")
 parser.add_argument("--save_model_dir", type=str, default=local_dir + "/temp/Qwen2.5-3B-GRPO")
 parser.add_argument("--num_train_epochs", type=float, default=0.01)
-parser.add_argument("--max_steps", type=int, default=5000)
+parser.add_argument("--train_steps", type=int, default=50)
 parser.add_argument("--save_steps", type=int, default=50)
 parser.add_argument("--save_total_limit", type=int, default=1)
 
@@ -35,7 +35,7 @@ lora_rank = args.lora_rank
 output_dir = args.output_dir
 save_model_dir = args.save_model_dir
 # num_train_epochs = args.num_train_epochs
-max_steps = args.max_steps
+train_steps = args.train_steps # for max_steps
 save_steps = args.save_steps
 save_total_limit = args.save_total_limit
 
@@ -145,7 +145,7 @@ if __name__ == "__main__":
         checkpoint = get_last_checkpoint(output_dir)
     print(f"Checkpoint: {checkpoint}")
 
-    max_steps = get_checkpoint_number(checkpoint) + max_steps
+    max_steps = get_checkpoint_number(checkpoint) + train_steps
 
     # Load and prep model
     model, tokenizer = FastLanguageModel.from_pretrained(
