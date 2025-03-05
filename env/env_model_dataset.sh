@@ -21,3 +21,7 @@ if [ ! -d "$LOCAL_DIR/datasets/gsm8k" ]; then
     hfd.sh openai/gsm8k --dataset --local-dir $LOCAL_DIR/datasets/gsm8k
 fi
 
+
+if [ ! -d "$LOCAL_DIR/datasets/aime_2024" ]; then
+    hfd.sh HuggingFaceH4/aime_2024 --dataset --local-dir $LOCAL_DIR/datasets/aime_2024
+fi
