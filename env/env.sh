@@ -1,6 +1,15 @@
 #!/bin/bash
 
-# use source ./0_env.sh to load the env variables
+# 获取当前脚本的绝对路径
+current_script=$(realpath "$0")
+
+# 获取当前脚本所在的目录
+current_dir=$(dirname "$current_script")
+
+# 获取上级目录
+parent_dir=$(dirname "$current_dir")
+
+
 
 export LOCAL_TOOL=~/tool
 
@@ -20,4 +29,6 @@ export HF_ENDPOINT=https://hf-mirror.com
 # export LOCAL_DIR=~/cache
 export LOCAL_DIR=/hy-tmp
 
+
+export PYTHONPATH=$parent_dir:$PYTHONPATH
 
