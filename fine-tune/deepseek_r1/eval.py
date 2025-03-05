@@ -1,3 +1,5 @@
+import os
+local_dir = os.environ['LOCAL_DIR'] # '/hy-tmp'
 
 """Custom evaluation tasks for LightEval."""
 import numpy as np
@@ -81,7 +83,7 @@ aime24 = LightevalTaskConfig(
     name="aime24",
     suite=["custom"],
     prompt_function=aime_prompt_fn,
-    hf_repo="HuggingFaceH4/aime_2024",
+    hf_repo= local_dir + '/datasets/aime_2024',  # "HuggingFaceH4/aime_2024",
     hf_subset="default",
     hf_avail_splits=["train"],
     evaluation_splits=["train"],
