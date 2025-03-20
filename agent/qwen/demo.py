@@ -1,5 +1,4 @@
 import pprint
-import os
 import urllib.parse
 import json5
 from qwen_agent.agents import Assistant
@@ -33,7 +32,7 @@ llm_cfg = {
     # Use the model service provided by DashScope:
     'model': 'qwen-max',
     'model_server': 'dashscope',
-    'api_key': os.environ.get('DASHSCOPE_API_KEY', None),
+    # 'api_key': 'YOUR_DASHSCOPE_API_KEY',
     # It will use the `DASHSCOPE_API_KEY' environment variable if 'api_key' is not set here.
 
     # Use a model service compatible with the OpenAI API, such as vLLM or Ollama:
@@ -47,19 +46,13 @@ llm_cfg = {
     }
 }
 
-if llm_cfg['api_key'] == None:
-    print('Please set the `DASHSCOPE_API_KEY` environment variable.')
-    exit()
-
-
 # Step 3: Create an agent. Here we use the `Assistant` agent as an example, which is capable of using tools and reading files.
-system_instruction = '''你是一个有用的助手。
-在收到用户请求后，你应该：
-- 首先绘制一张图片并获取图片URL，
-- 然后运行代码 `request.get(image_url)` 来下载图片，
-- 最后从给定的文档中选择一个图像操作来处理图像。
-请使用 `plt.show()` 来显示图片。'''
-
+system_instruction = '''You are a helpful assistant.
+After receiving the user's request, you should:
+- first draw an image and obtain the image url,
+- then run code `request.get(image_url)` to download the image,
+- and finally select an image operation from the given document to process the image.
+Please show the image using `plt.show()`.'''
 tools = ['my_image_gen', 'code_interpreter']  # `code_interpreter` is a built-in tool for executing code.
 files = ['./examples/resource/doc.pdf']  # Give the bot a PDF file to read.
 bot = Assistant(llm=llm_cfg,
@@ -77,9 +70,7 @@ while True:
     response = []
     for response in bot.run(messages=messages):
         # Streaming output.
-        #print('bot response:')
-        #pprint.pprint(response, indent=2)
-        pass
+        print('bot response:')
+        pprint.pprint(response, indent=2)
     # Append the bot responses to the chat history.
-    print('bot response: ' + response[-1]['content'])
     messages.extend(response)
