@@ -3,7 +3,7 @@ from functools import lru_cache
 
 FORMAT_PATTERNS = {
     '%d': {'pattern': r'(-?\d+)', 'converter': int},
-    '%s': {'pattern': r'(.+?)', 'converter': str},
+    '%s': {'pattern': r'(.*?)', 'converter': str},
     '%f': {'pattern': r'(-?\d+\.\d+)', 'converter': float},
     '%x': {'pattern': r'([0-9a-fA-F]+)', 'converter': lambda x: int(x, 16)},
 }
@@ -95,7 +95,7 @@ class FormatMatcher:
                         return fmt_idx, parsed
                     except ValueError:
                         continue
-        return None
+        return None, None
 
 
 if __name__ == '__main__':

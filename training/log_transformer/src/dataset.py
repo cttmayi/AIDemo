@@ -22,7 +22,7 @@ def str2int(s):
     return _str_dict[s]
 
 class LogDataset(Dataset):
-    def __init__(self, data_path,):
+    def __init__(self, data_path, data_len=512):
         self.data = []
 
         # 打开CSV文件
@@ -40,8 +40,8 @@ class LogDataset(Dataset):
                 for v in row[9]:
                     if v == '*':
                         one_data.append(str2int(v))
-                if len(one_data) > 100:
-                    self.data.append(one_data)
+                if len(one_data) > data_len:
+                    self.data.append(one_data[0:data_len])
                     one_data = []
 
 
@@ -49,11 +49,29 @@ class LogDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, idx):
-        item = self.data[idx]
+        
         result = {}
-        result['input_ids'] = torch.tensor(item, dtype=torch.long)
-        result['attention_mask'] = torch.ones_like(result['input_ids'])
-        result['labels'] = torch.tensor(item, dtype=torch.long)
+
+        if isinstance(idx, int):
+            item = self.data[idx]
+            result['input_ids'] = item
+            result['attention_mask'] = [1] * len(item)
+            result['labels'] = item.copy()
+        else:
+            items = self.data[idx]
+            result['input_ids'] = items
+            result['attention_mask'] = []
+            for item in items:
+                result['attention_mask'].append([1] * len(item))
+            result['labels'] = items.copy()
         return result
 
 
+def create_dataloader(data_path, batch_size, shuffle=True):
+    dataset = LogDataset(data_path)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
+    return dataloader
+
+def create_dataset(data_path):
+    dataset = LogDataset(data_path)
+    return dataset
