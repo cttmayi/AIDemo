@@ -22,3 +22,7 @@
 
 /lighteval/
 /unsloth/
+*.log
+*.csv
+
+/training/log_transformer/output/*
