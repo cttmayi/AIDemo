@@ -6,7 +6,7 @@ from swift.llm import TemplateType
 
 model_name = 'Qwen/Qwen3-0.6B-Base'
 dataset_name = 'wowhaha/moral-foundation-news_2000'# 'AI-ModelScope/alpaca-gpt4-data-en' # "afqmc"
-template_type = TemplateType.default
+template_type = None # TemplateType.default
 
 CURR_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT = os.path.basename(CURR_PATH)

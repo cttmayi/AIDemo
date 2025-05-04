@@ -1,8 +1,7 @@
 import torch
-from modelscope import AutoModelForCausalLM, GenerationConfig
+from modelscope import AutoModelForCausalLM
 from modelscope import AutoTokenizer
 from modelscope import MsDataset
-
 
 from swift import Swift
 from swift.llm import get_template, TemplateType, to_device
@@ -13,6 +12,7 @@ from swift import Swift, LoraConfig, PromptEncoderConfig
 MAX_LENGYH = 256
 
 def create_model(model_type, template_type):
+    print('Loading model:', model_type)
     model = AutoModelForCausalLM.from_pretrained(model_type, device_map='auto')
     peft_config = LoraConfig(
                     r=8,
@@ -20,16 +20,15 @@ def create_model(model_type, template_type):
                     lora_alpha=32,
                     lora_dropout=0.05)
 
-    # peft_config = PromptEncoderConfig(
-    #     task_type="CAUSAL_LM", num_virtual_tokens=10,
-    #     encoder_reparameterization_type="MLP",
-    #     encoder_dropout=0.1, encoder_hidden_size=1024)
 
     model = Swift.prepare_model(model, peft_config)
     model.print_trainable_parameters()
 
+    template_type = template_type or model.model_meta.template
+    print('Loading template:', template_type)
+
     tokenizer = AutoTokenizer.from_pretrained(model_type, trust_remote_code=True)
-    template = get_template(TemplateType.default, tokenizer, max_length=MAX_LENGYH)
+    template = get_template(template_type, tokenizer, max_length=MAX_LENGYH)
 
     return model, tokenizer, template
 
