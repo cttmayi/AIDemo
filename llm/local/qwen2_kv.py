@@ -47,7 +47,6 @@ def generate(model, model_inputs, use_cache=True, past_key_values=None):
         do_sample=False,
         use_cache=use_cache,
         past_key_values = past_key_values,
-        k = 0
     )
     end_time = time.time()  # 获取结束时间
     print(f"cache:{use_cache}, {past_key_values is not None} __ 时间：{end_time - start_time:.4f} 秒")
